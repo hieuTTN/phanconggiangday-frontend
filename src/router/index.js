@@ -8,6 +8,12 @@ import userAdmin from '../pages/admin/user'
 import addUserAdmin from '../pages/admin/adduser'
 import AdminKhoaHoc from '../pages/admin/khoahoc'
 import AdminNamHoc from '../pages/admin/namhoc'
+import AdminHocPhan from '../pages/admin/hocphan'
+import AdminAddHocPhan from '../pages/admin/addhocphan'
+import AdminGiangVien from '../pages/admin/giangvien'
+import AdminAddGiangVien from '../pages/admin/addgiangvien'
+import AdminKeHoach from '../pages/admin/kehoach'
+import AdminAddKeHoach from '../pages/admin/addkehoach'
 
 
 //public
@@ -36,6 +42,12 @@ const adminRoutes = [
     { path: "/admin/add-user", component: addUserAdmin, layout: layoutAdmin },
     { path: "/admin/khoa-hoc", component: AdminKhoaHoc, layout: layoutAdmin },
     { path: "/admin/nam-hoc", component: AdminNamHoc, layout: layoutAdmin },
+    { path: "/admin/hoc-phan", component: AdminHocPhan, layout: layoutAdmin },
+    { path: "/admin/add-hoc-phan", component: AdminAddHocPhan, layout: layoutAdmin },
+    { path: "/admin/giang-vien", component: AdminGiangVien, layout: layoutAdmin },
+    { path: "/admin/add-giang-vien", component: AdminAddGiangVien, layout: layoutAdmin },
+    { path: "/admin/ke-hoach", component: AdminKeHoach, layout: layoutAdmin },
+    { path: "/admin/add-ke-hoach", component: AdminAddKeHoach, layout: layoutAdmin },
 ];
 
 

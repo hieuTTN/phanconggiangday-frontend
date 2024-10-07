@@ -130,9 +130,8 @@ const AdminUser = ()=>{
                         <thead>
                             <tr>
                                 <th>id</th>
-                                <th>Tên đăng nhập</th>
+                                <th>Email đăng nhập</th>
                                 <th>Họ tên</th>
-                                <th>Số điện thoại</th>
                                 <th>Ngày tạo</th>
                                 <th>Quyền</th>
                                 <th>Khóa</th>
@@ -148,9 +147,8 @@ const AdminUser = ()=>{
                                 }
                                 return  <tr>
                                     <td>{item.id}</td>
-                                    <td>{item.username}</td>
-                                    <td>{item.fullname}</td>
-                                    <td>{item.phone}</td>
+                                    <td>{item.email}</td>
+                                    <td>{item.fullName}</td>
                                     <td>{item.createdDate}</td>
                                     <td>{item.authorities.name}</td>
                                     <td class="sticky-col">

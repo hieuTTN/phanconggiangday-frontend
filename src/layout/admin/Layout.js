@@ -60,16 +60,42 @@ function Header({ children }){
                         </li>
                     </ul>
                 </li>
-                <li className={isActive(["/admin/danh-gia-hieu-qua", "/admin/them-danh-gia-hieu-qua"])}>
-                    <a href="#coldanhgiahieuqua" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle text-white text-decoration-none">
-                        <i class="fa fa-star"></i> Đánh giá hiệu quả
+                <li className={isActive(["/admin/add-hoc-phan", "/admin/hoc-phan"])}>
+                    <a href="#colhocphan" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle text-white text-decoration-none">
+                        <i class="fa fa-book"></i> Học phần
                     </a>
-                    <ul class="collapse list-unstyleds" id="coldanhgiahieuqua">
+                    <ul class="collapse list-unstyleds" id="colhocphan">
                         <li class="nav-item">
-                            <a href="user" class="text-white text-decoration-none ps-4"><i class="fa fa-list"></i> Danh sách đánh giá</a>
+                            <a href="hoc-phan" class="text-white text-decoration-none ps-4"><i class="fa fa-list"></i> Danh sách học phần</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="text-white text-decoration-none ps-4"><i class="fa fa-plus"></i> Thêm đánh giá</a>
+                            <a href="add-hoc-phan" class="text-white text-decoration-none ps-4"><i class="fa fa-plus"></i> Thêm học phần</a>
+                        </li>
+                    </ul>
+                </li>
+                <li className={isActive(["/admin/giang-vien", "/admin/add-giang-vien"])}>
+                    <a href="#colgiangvien" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle text-white text-decoration-none">
+                        <i class="fa fa-user"></i> Giảng viên
+                    </a>
+                    <ul class="collapse list-unstyleds" id="colgiangvien">
+                        <li class="nav-item">
+                            <a href="giang-vien" class="text-white text-decoration-none ps-4"><i class="fa fa-list"></i> Danh sách giảng viên</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="add-giang-vien" class="text-white text-decoration-none ps-4"><i class="fa fa-plus"></i> Thêm giảng viên</a>
+                        </li>
+                    </ul>
+                </li>
+                <li className={isActive(["/admin/ke-hoach", "/admin/add-ke-hoach"])}>
+                    <a href="#colkehoach" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle text-white text-decoration-none">
+                        <i class="fa fa-calendar-check"></i> Kế hoạch mở môn
+                    </a>
+                    <ul class="collapse list-unstyleds" id="colkehoach">
+                        <li class="nav-item">
+                            <a href="ke-hoach" class="text-white text-decoration-none ps-4"><i class="fa fa-list"></i> Danh sách kế hoạch</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="add-ke-hoach" class="text-white text-decoration-none ps-4"><i class="fa fa-plus"></i> Thêm kế hoạch</a>
                         </li>
                     </ul>
                 </li>

@@ -13,18 +13,12 @@ async function handleAddAccount(event) {
     document.getElementById("loading").style.display = 'block'
     var avatar = await uploadSingleFile(document.getElementById("avatar"));
     const payload = {
-        fullname: event.target.elements.fullName.value,
+        fullName: event.target.elements.fullName.value,
         email: event.target.elements.email.value,
-        phone: event.target.elements.phone.value,
         password: event.target.elements.password.value,
-        address: event.target.elements.diachi.value,
-        dob: event.target.elements.ngaysinh.value,
         avatar: avatar,
         authorities: {
             name: event.target.elements.role.value
-        },
-        department: {
-            id: event.target.elements.department.value
         },
     };
     console.log(payload);
@@ -50,24 +44,14 @@ async function handleAddAccount(event) {
 const AdminAddUser = ()=>{
     const [items, setItems] = useState([]);
     const [authorities, setAuthorities] = useState([]);
-    const [department, setDepartment] = useState([]);
     const [contentPage, setContentPage] = useState("Thêm tài khoản");
     useEffect(()=>{
-        const getUser = async() =>{
-        };
-        getUser();
         const getAuthority = async() =>{
             var response = await getMethod('/api/authority/admin/all')
             var result = await response.json();
             setAuthorities(result)
         };
         getAuthority();
-        const getDepartment = async() =>{
-            var response = await getMethod('/api/department/public/all')
-            var result = await response.json();
-            setDepartment(result)
-        };
-        getDepartment();
     }, []);
 
 
@@ -81,14 +65,8 @@ const AdminAddUser = ()=>{
                 <div class="col-sm-5">
                     <label class="lb-form">Họ tên</label>
                     <input name="fullName" class="form-control"/>
-                    <label class="lb-form">Số điện thoại</label>
-                    <input name="phone" class="form-control"/>
                     <label class="lb-form">Email</label>
                     <input required name="email" class="form-control"/>
-                    <label class="lb-form">Địa chỉ</label>
-                    <input required name="diachi" class="form-control"/>
-                    <label class="lb-form">Ngày sinh</label>
-                    <input required name="ngaysinh" type="date" class="form-control"/>
                     <br/>
                     <div id="loading">
                         <div class="bar1 bar"></div>
@@ -104,17 +82,6 @@ const AdminAddUser = ()=>{
                             return <option value={item.name}>{item.description}</option>
                         }))}
                     </select>
-                    <label class="lb-form">Chọn ngành</label>
-                    <Select
-                        className="select-container" 
-                        // onChange={loadHuyen}
-                        options={department}
-                        getOptionLabel={(option) => option.name} 
-                        getOptionValue={(option) => option.id}    
-                        closeMenuOnSelect={false}
-                        name='department'
-                        placeholder="Chọn ngành"
-                    />
                     <label class="lb-form">Avatar</label>
                     <input id="avatar" type="file" class="form-control"/>
                     <img id="imgpreview" class="imgpreview"/>
