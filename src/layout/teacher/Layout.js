@@ -39,81 +39,34 @@ function Header({ children }){
         <div class="d-flex" id="wrapper">
         <nav id="sidebar" class="bg-dark">
             <div class="sidebar-header p-3 text-white">
-                <h3>Admin <i class="fa fa-bars pointer" id="iconbaradmin" onClick={openClose}></i></h3> 
+                <h3>Teacher <i class="fa fa-bars pointer" id="iconbaradmin" onClick={openClose}></i></h3> 
             </div>
             <ul class="list-unstyled components">
-                <li className={isActive("/admin/index")}>
-                    <a href="index" class="text-white text-decoration-none">
-                        <i class="fa fa-home"></i> Trang chủ
-                    </a>
-                </li>
-                <li className={isActive(["/admin/user"])}>
+                <li className={isActive(["/teacher/user","/teacher/doimatkhau"])}>
                     <a href="#coltaikhoan" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle text-white text-decoration-none">
                         <i class="fa fa-user"></i> Tài khoản
                     </a>
                     <ul class="collapse list-unstyleds" id="coltaikhoan">
                         <li class="nav-item">
-                            <a href="user" class="text-white text-decoration-none ps-4"><i class="fa fa-list"></i> Danh sách tài khoản</a>
+                            <a href="user" class="text-white text-decoration-none ps-4"><i class="fa fa-list"></i> Tài khoản của tôi</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="text-white text-decoration-none ps-4"><i class="fa fa-plus"></i> Thêm tài khoản</a>
+                            <a href="doimatkhau" class="text-white text-decoration-none ps-4"><i class="fa fa-lock"></i> Đổi mật khẩu</a>
                         </li>
                     </ul>
                 </li>
-                <li className={isActive(["/admin/blog", "/admin/add-blog"])}>
-                    <a href="#colbaiviet" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle text-white text-decoration-none">
-                        <i class="fa fa-newspaper"></i> Bài viết
-                    </a>
-                    <ul class="collapse list-unstyleds" id="colbaiviet">
-                        <li class="nav-item">
-                            <a href="blog" class="text-white text-decoration-none ps-4"><i class="fa fa-list"></i> Danh sách tin đăng</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="add-blog" class="text-white text-decoration-none ps-4"><i class="fa fa-plus"></i> Thêm bài viết</a>
-                        </li>
-                    </ul>
-                </li>
-                <li className={isActive(["/admin/category"])}>
-                    <a href="category" class="text-white text-decoration-none">
-                        <i class="fa fa-list"></i> Danh mục
+                <li className={isActive("/admin/phancong")}>
+                    <a href="phancong" class="text-white text-decoration-none">
+                        <i class="fa fa-calendar"></i> Phân công
                     </a>
                 </li>
-                <li className={isActive(["/admin/real-estate", "/admin/add-real-estate"])}>
-                    <a href="#dashboardSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle text-white text-decoration-none">
-                        <i class="fa fa-home"></i> Tin đăng BĐS
-                    </a>
-                    <ul class="collapse list-unstyleds" id="dashboardSubmenu">
-                        <li class="nav-item">
-                            <a href="tincuatoi" class="text-white text-decoration-none ps-4"><i class="fa fa-list"></i> Danh sách tin đăng</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="add-real-estate" class="text-white text-decoration-none ps-4"><i class="fa fa-plus"></i> Đăng tin</a>
-                        </li>
-                    </ul>
-                </li>
-                <li className={isActive(["/admin/history-pay", "/admin/deduction-history","/admin/statistic"])}>
-                    <a href="#dashboardSubmenu1" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle text-white text-decoration-none">
-                        <i class="fa-solid fa-chart-line"></i> Thống kê
-                    </a>
-                    <ul class="collapse list-unstyleds" id="dashboardSubmenu1">
-                        <li class="nav-item">
-                            <a href="history-pay" class="text-white text-decoration-none ps-4"><i class="fa fa-clock"></i> Lịch sử nạp tiền</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="deduction-history" class="text-white text-decoration-none ps-4"><i class="fa fa-clock"></i> Lịch sử trừ tiền</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="statistic" class="text-white text-decoration-none ps-4"><i class="fa fa-chart-line"></i> Doanh thu năm</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#eCommerce" class="text-white text-decoration-none">
-                        <i class="fa fa-flag"></i> Báo cáo
+                <li className={isActive("/admin/bao-cao")}>
+                    <a href="bao-cao" class="text-white text-decoration-none">
+                        <i class="fa fa-list"></i> Báo cáo
                     </a>
                 </li>
                 <li>
-                    <a href="#eCommerce" class="text-white text-decoration-none">
+                    <a href="#" onClick={logout} class="text-white text-decoration-none">
                         <i class="fa fa-sign-out"></i> Đăng xuất
                     </a>
                 </li>
@@ -142,11 +95,11 @@ function Header({ children }){
             
                     <div class="dropdown ms-3">
                         <a class="dropdown-toggle d-flex align-items-center text-decoration-none" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="navbar-text me-2">{user?.username}</span>
+                            <span class="navbar-text me-2">{user?.email}</span>
                             {/* <img src={user?.avatar} class="rounded-circle" alt="User Avatar"/> */}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="#">Update Info</a></li>
+                            <li><a class="dropdown-item" href="taikhoan">Cập nhật thông tin</a></li>
                             <li onClick={logout}><a class="dropdown-item" href="#">Logout</a></li>
                         </ul>
                     </div>

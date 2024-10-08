@@ -7,102 +7,90 @@ import Swal from 'sweetalert2'
 import {getMethod, postMethod, postMethodPayload, uploadSingleFile} from '../../services/request';
 
 
-var imageUser = '';
-async function updateInfor() {
-    document.getElementById("loading").style.display = 'block'
-    var img = await uploadSingleFile(document.getElementById("inputchonavatar"))
-    if(img != null){
-        imageUser = img;
+async function capNhatInfor(event) {
+    event.preventDefault();
+    var payload = {
+        "tenGV": event.target.elements.tenGV.value,
+        "ngaySinh": event.target.elements.ngaySinh.value,
+        "chuyenNganh": event.target.elements.chuyenNganh.value,
+        "hocVi": event.target.elements.hocVi.value,
+        "chucDanh": event.target.elements.chucDanh.value,
+        "donViCongTac": event.target.elements.donViCongTac.value,
+        "dienThoai": event.target.elements.dienThoai.value,
     }
-
-    const payload = {
-        fullname: document.getElementById("tenhienthi").value,
-        phone: document.getElementById("sdt").value,
-        avatar: imageUser,
-    };
-    console.log(payload);
-    
-    const res = await postMethodPayload('/api/user/all/update-infor', payload);
-    if(res.status < 300){
-        toast.success("Cập nhật thông tin tài khoản thành công")
-    }
-    else{
-        toast.error("Cập nhật thông tin thất bại")
-    }
-    document.getElementById("loading").style.display = 'none'
-};
-
-
-function TaiKhoan(){
-    const [user, setUser] = useState({});
-    useEffect(()=>{
-        const getUser = async() =>{
-            var response = await postMethod("/api/user/user/user-logged")
-            var result = await response.json();
-            setUser(result)
-            imageUser = result.avatar
-        };
-        getUser();
-    }, []);
-
-    function chonAnh(){
-        document.getElementById("inputchonavatar").click();
-    }
-
-    function changeAnh(){
-        const [file] = document.getElementById("inputchonavatar").files
-        if (file) {
-            document.getElementById("anhdaidien").src = URL.createObjectURL(file)
+    const response = await postMethodPayload('/api/giang-vien/teacher/cap-nhat-thong-tin', payload)
+    if (response.status < 300) {
+        Swal.fire({
+            title: "Thông báo",
+            text: "Cập nhật thành công!",
+            preConfirm: () => {
+                window.location.reload();
+            }
+        });
+    } 
+    else {
+        if (response.status == 417) {
+            var result = await response.json()
+            toast.warning(result.defaultMessage);
+        }
+        else{
+             toast.error("Thất bại");
         }
     }
+}
+
+function TeacherInfor(){
+    const [teacher, setTeacher] = useState(null);
+    useEffect(()=>{
+        const getInfor = async() =>{
+            var response = await getMethod("/api/giang-vien/teacher/thong-tin-cua-toi")
+            var result = await response.json();
+            setTeacher(result)
+        };
+        getInfor();
+    }, []);
 
     return(
     <>
         <h3>Cập nhật thông tin cá nhân</h3>
-        <div style={{margin:'auto'}} class="col-sm-8">
+        <form onSubmit={capNhatInfor} style={{margin:'auto'}} class="col-sm-8">
             <table class="table">
                 <tr>
-                    <td>Mã thành viên</td>
-                    <td><input value={user.id} readonly disabled class="form-control"/></td>
+                    <th>Họ tên</th>
+                    <td><br/><input defaultValue={teacher?.tenGV} name='tenGV' class="form-control"/></td>
                 </tr>
                 <tr>
-                    <td>Email</td>
-                    <td><br/><input value={user.email} readonly disabled class="form-control"/></td>
+                    <th>Ngày sinh</th>
+                    <td><br/><input defaultValue={teacher?.ngaySinh} type='date' name="ngaySinh" class="form-control"/></td>
                 </tr>
                 <tr>
-                    <td>Tên hiển thị</td>
-                    <td><br/><input defaultValue={user.fullname} id="tenhienthi" class="form-control"/></td>
+                    <th>Chuyên ngành</th>
+                    <td><br/><input defaultValue={teacher?.chuyenNganh} name="chuyenNganh" class="form-control"/></td>
                 </tr>
                 <tr>
-                    <td>Số điện thoại</td>
-                    <td><br/><input defaultValue={user.phone} id="sdt" class="form-control"/></td>
+                    <th>Học vị</th>
+                    <td><br/><input defaultValue={teacher?.hocVi} name="hocVi" class="form-control"/></td>
                 </tr>
                 <tr>
-                    <td>Mật khẩu</td>
+                    <th>Chức danh</th>
+                    <td><br/><input defaultValue={teacher?.chucDanh} name="chucDanh" class="form-control"/></td>
+                </tr>
+                <tr>
+                    <th>Đơn vị công tác</th>
+                    <td><br/><input defaultValue={teacher?.donViCongTac} name="donViCongTac" class="form-control"/></td>
+                </tr>
+                <tr>
+                    <th>Số điện thoại</th>
+                    <td><br/><input defaultValue={teacher?.dienThoai} name="dienThoai" class="form-control"/></td>
+                </tr>
+                <tr>
+                    <th>Mật khẩu</th>
                     <td><br/><a class="pointer" href="doimatkhau">Đổi mật khẩu</a></td>
                 </tr>
-                <tr>
-                    <td>Ảnh đại diện</td>
-                    <td>
-                        <div>
-                            <img src={user.avatar} id="anhdaidien" class="anhdaidienupdate"/>
-                            <br/><button onClick={chonAnh} id="btnuploadavatar" class="btn btn-secondary btnuploadavatar">Chọn ảnh</button>
-                            <input onChange={changeAnh} id="inputchonavatar" type="file" style={{visibility:'hidden'}}/>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>
-                        <div id="loading">
-                            <div class="bar1 bar"></div>
-                        </div><br/><br/>
-                        <button onClick={updateInfor} class="btn btn-primary btntable">Cập nhật</button>
-                    </td>
-                </tr>
             </table>
-        </div>
+            <button class="btn btn-primary ">Cập nhật</button>
+        </form>
     </>
     );
 }
-export default TaiKhoan;
+export default TeacherInfor;

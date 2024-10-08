@@ -22,6 +22,8 @@ import login from '../pages/public/login'
 //teacher
 import taikhoan from '../pages/teacher/taikhoan'
 import DoiMatKhau from '../pages/teacher/doimatkhau'
+import TeacherInfor from '../pages/teacher/taikhoan'
+import TeacherPhanCong from '../pages/teacher/phancong'
 
 
 
@@ -32,7 +34,8 @@ const publicRoutes = [
 
 const teacherRoutes = [
     { path: "/teacher/doimatkhau", component: DoiMatKhau, layout:layoutTeacher },
-    { path: "/teacher/taikhoan", component: taikhoan, layout:layoutTeacher },
+    { path: "/teacher/taikhoan", component: TeacherInfor, layout:layoutTeacher },
+    { path: "/teacher/phancong", component: TeacherPhanCong, layout:layoutTeacher },
 ];
 
 

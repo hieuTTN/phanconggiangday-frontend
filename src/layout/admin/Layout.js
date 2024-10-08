@@ -139,11 +139,11 @@ function Header({ children }){
             
                     <div class="dropdown ms-3">
                         <a class="dropdown-toggle d-flex align-items-center text-decoration-none" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="navbar-text me-2">{user?.username}</span>
+                            <span class="navbar-text me-2">{user?.email}</span>
                             {/* <img src={user?.avatar} class="rounded-circle" alt="User Avatar"/> */}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="#">Update Info</a></li>
+                            <li><a class="dropdown-item" href="#">Cập nhật thông tin</a></li>
                             <li onClick={logout}><a class="dropdown-item" href="#">Logout</a></li>
                         </ul>
                     </div>
