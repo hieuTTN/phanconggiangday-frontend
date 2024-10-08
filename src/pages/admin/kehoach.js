@@ -23,6 +23,10 @@ const AdminKeHoach = ()=>{
     const [selectKhoaHoc, setSelectKhoaHoc] = useState(null);
     const [selectNamHoc, setSelectNamHoc] = useState(null);
     const [selectHocPhan, setSelectHocPhan] = useState(null);
+    const [giangVien, setGiangVien] = useState([]);
+    const [selectGiangVien, setSelectGiangVien] = useState(null);
+    const [kehoach, setKeHoach] = useState(null);
+    const [listKeHoach, setListKeHoach] = useState([]);
 
     useEffect(()=>{
         const getKeHoach = async() =>{
@@ -45,6 +49,12 @@ const AdminKeHoach = ()=>{
             sethocPhan(result)
         };
         getSelect();
+        const getGiangVien = async() =>{
+            var response = await getMethod('/api/giang-vien/all/find-all-list')
+            var result = await response.json();
+            setGiangVien(result)
+        };
+        getGiangVien();
     }, []);
 
     const handlePageClick = async (data)=>{
@@ -79,7 +89,7 @@ const AdminKeHoach = ()=>{
         url = uls
     };
 
-    async function deleteHocPhan(id){
+    async function deletekeHoach(id){
         var con = window.confirm("Bạn chắc chắn muốn xóa kế hoạch này?");
         if (con == false) {
             return;
@@ -105,7 +115,59 @@ const AdminKeHoach = ()=>{
         setpageCount(result.totalPages)
         url = '/api/ke-hoach-mo-mon/all/find-all?&size='+size+'&sort=id,desc&page='
     }
+
+    async function loadDanhSachGv(item) {
+        setKeHoach(item)
+        var response = await getMethod('/api/phan-cong-giang-vien/admin/find-by-ke-hoach?keHoachId='+item.id)
+        var result = await response.json();
+        setListKeHoach(result)
+    }
     
+
+    async function handleAddPhanCong(event) {
+        event.preventDefault();
+        const payload = {
+            soNhom: event.target.elements.soNhom.value,
+            keHoachMoMon: {
+                id: kehoach.id,
+            },
+            giangVien: {
+                maCB: selectGiangVien.maCB,
+            },
+        };
+        
+        const res = await postMethodPayload('/api/phan-cong-giang-vien/admin/add',payload)
+        var result = await res.json()
+        console.log(result);
+        if (res.status == 417) {
+            toast.error(result.defaultMessage);
+        }
+        if(res.status < 300){
+            toast.success("Thành công!");
+            var response = await getMethod('/api/phan-cong-giang-vien/admin/find-by-ke-hoach?keHoachId='+kehoach.id)
+            var result = await response.json();
+            setListKeHoach(result)
+        }
+    };
+
+    async function deletePhanCong(id){
+        var con = window.confirm("Bạn chắc chắn muốn xóa phân công này?");
+        if (con == false) {
+            return;
+        }
+        var response = await deleteMethod('/api/phan-cong-giang-vien/admin/delete?id='+id)
+        if (response.status < 300) {
+            toast.success("xóa thành công!");
+            var response = await getMethod('/api/phan-cong-giang-vien/admin/find-by-ke-hoach?keHoachId='+kehoach.id)
+            var result = await response.json();
+            setListKeHoach(result)
+        }
+        if (response.status == 417) {
+            var result = await response.json()
+            toast.warning(result.defaultMessage);
+        }
+    }
+
     return (
         <>
             <div class="headerpageadmin d-flex justify-content-between align-items-center p-3 bg-light border">
@@ -176,7 +238,8 @@ const AdminKeHoach = ()=>{
                                     <td>{item.tongSoNhom}</td>
                                     <td class="sticky-col">
                                         <a href={'add-ke-hoach?id='+item.id} class="edit-btn"><i className='fa fa-edit'></i></a>
-                                        <button onClick={()=>deleteHocPhan(item.id)} class="delete-btn"><i className='fa fa-trash'></i></button>
+                                        <button onClick={()=>deletekeHoach(item.id)} class="delete-btn"><i className='fa fa-trash'></i></button>
+                                        <button onClick={()=>loadDanhSachGv(item)} data-bs-toggle="modal" data-bs-target="#addtk" class="edit-btn"><i className='fa fa-user-plus'></i></button>
                                     </td>
                                 </tr>
                             }))}
@@ -202,6 +265,71 @@ const AdminKeHoach = ()=>{
                 </div>
             </div>
 
+            <div class="modal fade" id="addtk" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Thêm giảng viên</h5> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+                        <div class="modal-body row">
+                            <form onSubmit={handleAddPhanCong} className='row'>
+                                <div className='col-sm-4'>
+                                    <label class="lb-form">Số nhóm dạy</label>
+                                    <input name='soNhom' id='soNhom' class="form-control"/>
+                                </div>
+                                <div className='col-sm-4'>
+                                    <label class="lb-form">Giảng viên</label>
+                                    <Select
+                                        className="select-container" 
+                                        options={giangVien}
+                                        onChange={setSelectGiangVien}
+                                        getOptionLabel={(option) => option.maCB + " - "+option.tenGV} 
+                                        getOptionValue={(option) => option.maCB}    
+                                        closeMenuOnSelect={false}
+                                        id='giangvien'
+                                        placeholder="Chọn giảng viên"
+                                    />
+                                </div>
+                                <div className='col-sm-4'>
+                                    <label class="lb-form" dangerouslySetInnerHTML={{__html:'&ThinSpace;'}}></label>
+                                    <button className='btn btn-primary'>Thêm</button>
+                                </div>
+                            </form>
+
+                            <div class="tablediv">
+                                <div class="headertable">
+                                    <span class="lbtable">Danh sách phân công </span>
+                                </div>
+                                <div class="divcontenttable">
+                                    <table id="example" class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Mã giảng viên</th>
+                                                <th>Tên giảng viên</th>
+                                                <th>Số nhóm dạy</th>
+                                                <th>Ngày thêm</th>
+                                                <th>Chức năng</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {listKeHoach.map((item=>{
+                                                return  <tr>
+                                                    <td>{item.giangVien.maCB}</td>
+                                                    <td>{item.giangVien.tenGV}</td>
+                                                    <td>{item.soNhom}</td>
+                                                    <td>{item.ngayCapNhat}</td>
+                                                    <td class="sticky-col">
+                                                        <button onClick={()=>deletePhanCong(item.id)} class="delete-btn"><i className='fa fa-trash'></i></button>
+                                                    </td>
+                                                </tr>
+                                            }))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </>
     );
 }
