@@ -8,55 +8,17 @@ import {getMethod,postMethodPayload, deleteMethod} from '../../services/request'
 import Select from 'react-select';
 
 
-async function saveKeHoach(event) {
-    event.preventDefault();
-    var uls = new URL(document.URL)
-    var id = uls.searchParams.get("id");
-    var payload = {
-        "id": id,
-        "tongSoNhom": event.target.elements.tongSoNhom.value,
-        "soLuongSinhVienNhom": event.target.elements.soLuongSinhVienNhom.value,
-        "khoaHoc": {
-            "maKhoaHoc":event.target.elements.khoaHoc.value
-        },
-        "namHoc": {
-            "id":event.target.elements.namHoc.value
-        },
-        "hocPhan": {
-            "maHP":event.target.elements.hocPhan.value
-        },
-    }
-    console.log(payload);
-    
-    const response = await postMethodPayload('/api/ke-hoach-mo-mon/admin/add', payload)
-    if (response.status < 300) {
-        Swal.fire({
-            title: "Thông báo",
-            text: "Thêm/cập nhật thành công!",
-            preConfirm: () => {
-                window.location.href = 'ke-hoach'
-            }
-        });
-    } 
-    else {
-        if (response.status == 417) {
-            var result = await response.json()
-            toast.warning(result.defaultMessage);
-        }
-        else{
-             toast.error("Thêm/ sửa kế hoạch thất bại");
-        }
-    }
-}
 
 const AdminAddKeHoach = ()=>{
     const [item, setItem] = useState(null);
     const [khoahoc, setKhoaHoc] = useState([]);
     const [namHoc, setnamHoc] = useState([]);
     const [hocPhan, sethocPhan] = useState([]);
+    const [nganh, setNganh] = useState([]);
     const [selectKhoaHoc, setSelectKhoaHoc] = useState(null);
     const [selectNamHoc, setSelectNamHoc] = useState(null);
     const [selectHocPhan, setSelectHocPhan] = useState(null);
+    const [selectedNganh, setSelectedNganh] = useState([]);
 
     useEffect(()=>{
         const getKeHoach = async() =>{
@@ -69,6 +31,11 @@ const AdminAddKeHoach = ()=>{
                 setSelectKhoaHoc(result.khoaHoc)
                 setSelectNamHoc(result.namHoc)
                 setSelectHocPhan(result.hocPhan)
+                var listnganh = [];
+                for(var i=0; i<result.keHoachMoMonNganhs.length; i++){
+                    listnganh.push(result.keHoachMoMonNganhs[i].nganh)
+                }
+                setSelectedNganh(listnganh)
             }
         };
         getKeHoach();
@@ -84,6 +51,12 @@ const AdminAddKeHoach = ()=>{
             sethocPhan(result)
         };
         getSelect();
+        const getNganh = async() =>{
+            var response = await getMethod('/api/nganh/all/find-all')
+            var result = await response.json();
+            setNganh(result)
+        };
+        getNganh();
     }, []);
 
     const handleChangeKhoaHoc= (option) =>{
@@ -97,6 +70,55 @@ const AdminAddKeHoach = ()=>{
     const handleChangeNamHoc= (option) =>{
         setSelectNamHoc(option)
     }
+
+
+    async function saveKeHoach(event) {
+        event.preventDefault();
+        var uls = new URL(document.URL)
+        var id = uls.searchParams.get("id");
+        var strings = [];
+        for(var i =0; i< selectedNganh.length; i++){
+            strings.push(selectedNganh[i].maNganh)
+        }
+        
+        var payload = {
+            "id": id,
+            "tongSoNhom": event.target.elements.tongSoNhom.value,
+            "soLuongSinhVienNhom": event.target.elements.soLuongSinhVienNhom.value,
+            "listMaNganh": strings,
+            "khoaHoc": {
+                "maKhoaHoc":event.target.elements.khoaHoc.value
+            },
+            "namHoc": {
+                "id":event.target.elements.namHoc.value
+            },
+            "hocPhan": {
+                "maHP":event.target.elements.hocPhan.value
+            },
+        }
+        console.log(payload);
+        
+        const response = await postMethodPayload('/api/ke-hoach-mo-mon/admin/add', payload)
+        if (response.status < 300) {
+            Swal.fire({
+                title: "Thông báo",
+                text: "Thêm/cập nhật thành công!",
+                preConfirm: () => {
+                    window.location.href = 'ke-hoach'
+                }
+            });
+        } 
+        else {
+            if (response.status == 417) {
+                var result = await response.json()
+                toast.warning(result.defaultMessage);
+            }
+            else{
+                 toast.error("Thêm/ sửa kế hoạch thất bại");
+            }
+        }
+    }
+    
     
     return (
         <>
@@ -148,6 +170,20 @@ const AdminAddKeHoach = ()=>{
                                     closeMenuOnSelect={false}
                                     name='hocPhan'
                                     placeholder="Chọn học phần"
+                                />
+                                <label class="lb-form">Chọn các ngành</label>
+                                <label class="lb-form">Ngành</label>
+                                <Select
+                                    className="select-container" 
+                                    options={nganh}
+                                    isMulti
+                                    onChange={setSelectedNganh}
+                                    value={selectedNganh}
+                                    getOptionLabel={(option) => option.tenNganh} 
+                                    getOptionValue={(option) => option.maNganh}    
+                                    closeMenuOnSelect={false}
+                                    name='nganh'
+                                    placeholder="Chọn ngành"
                                 />
 
                             <br/><button class="btn btn-primary form-control">Thêm/ cập nhật</button>

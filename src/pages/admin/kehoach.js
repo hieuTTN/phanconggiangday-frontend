@@ -224,6 +224,7 @@ const AdminKeHoach = ()=>{
                                 <th>Khóa học</th>
                                 <th>Số lượng sinh viên</th>
                                 <th>Tổng số nhóm</th>
+                                <th>Ngành</th>
                                 <th>Chức năng</th>
                             </tr>
                         </thead>
@@ -233,7 +234,14 @@ const AdminKeHoach = ()=>{
                                     <td>{item.hocPhan.maHP}</td>
                                     <td>{item.hocPhan.tenHP}</td>
                                     <td>{item.namHoc.hocKy}, {item.namHoc.tenNamHoc}</td>
-                                    <td>{item.khoaHoc.tenKhoaHoc}</td>
+                                    <td>{item.khoaHoc.tenKhoaHoc}<br/>
+                                    {item.keHoachMoMonNganhs.map((khmm, index)=>{
+                                        // {khmm.nganh.maNganh}
+                                        return <span>{khmm.nganh.tenNganh}
+                                       {index < item.keHoachMoMonNganhs.length - 1 && " + "}
+                                        </span>
+                                    })}
+                                    </td>
                                     <td>{item.soLuongSinhVienNhom}</td>
                                     <td>{item.tongSoNhom}</td>
                                     <td class="sticky-col">

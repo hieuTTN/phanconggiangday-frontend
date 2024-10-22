@@ -58,11 +58,11 @@ const AdminKhoaHoc = ()=>{
             maKhoaHoc: event.target.elements.makh.value,
             tenKhoaHoc: event.target.elements.tenkh.value,
         };
-        var url = '/api/khoa-hoc/admin/add'
+        var urls = '/api/khoa-hoc/admin/add'
         if(type == "update"){
-            url = '/api/khoa-hoc/admin/update'
+            urls = '/api/khoa-hoc/admin/update'
         }
-        const res = await postMethodPayload(url,payload)
+        const res = await postMethodPayload(urls,payload)
         var result = await res.json()
         console.log(result);
         if (res.status == 417) {

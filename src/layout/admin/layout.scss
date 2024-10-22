@@ -11,7 +11,7 @@
 #sidebar .sidebar-header {
     font-size: 1.5rem;
     padding: 20px;
-    background-color: #212529;
+    background-color: #5733dd;
 }
 
 #sidebar .list-unstyled {
@@ -39,7 +39,7 @@
     font-size: 1.25rem;
 }
 #sidebar ul ul {
-    background: #495057;
+    background: #5733dd;
     padding-left: 0;
 }
 
@@ -79,7 +79,8 @@
     cursor: pointer;
 }
 #iconbaradmin{
-    visibility: hidden;
+    display: none;
+
 }
 #navbarmain{
     position: fixed;
@@ -116,7 +117,7 @@
         font-size: 1.25rem; /* Giảm kích thước biểu tượng cho thiết bị nhỏ */
     }
     #iconbaradmin{
-        visibility: visible;
+        display: block;
     }
     #navbarmain{
         left: 0px !important; 
@@ -456,4 +457,11 @@
 .pointer{
     text-decoration: none;
     cursor: pointer;
+}
+.imglogonavbar{
+    width: 80%;
+    margin-left: 10%;
+}
+.bg-dark{
+    background-color: #5733dd !important;
 }

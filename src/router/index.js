@@ -14,6 +14,7 @@ import AdminGiangVien from '../pages/admin/giangvien'
 import AdminAddGiangVien from '../pages/admin/addgiangvien'
 import AdminKeHoach from '../pages/admin/kehoach'
 import AdminAddKeHoach from '../pages/admin/addkehoach'
+import AdminChuyenNganh from '../pages/admin/chuyennganh'
 
 
 //public
@@ -24,6 +25,7 @@ import taikhoan from '../pages/teacher/taikhoan'
 import DoiMatKhau from '../pages/teacher/doimatkhau'
 import TeacherInfor from '../pages/teacher/taikhoan'
 import TeacherPhanCong from '../pages/teacher/phancong'
+import TeacherGiangDay from '../pages/teacher/giangday'
 
 
 
@@ -36,6 +38,7 @@ const teacherRoutes = [
     { path: "/teacher/doimatkhau", component: DoiMatKhau, layout:layoutTeacher },
     { path: "/teacher/taikhoan", component: TeacherInfor, layout:layoutTeacher },
     { path: "/teacher/phancong", component: TeacherPhanCong, layout:layoutTeacher },
+    { path: "/teacher/giang-day", component: TeacherGiangDay, layout:layoutTeacher },
 ];
 
 
@@ -51,6 +54,7 @@ const adminRoutes = [
     { path: "/admin/add-giang-vien", component: AdminAddGiangVien, layout: layoutAdmin },
     { path: "/admin/ke-hoach", component: AdminKeHoach, layout: layoutAdmin },
     { path: "/admin/add-ke-hoach", component: AdminAddKeHoach, layout: layoutAdmin },
+    { path: "/admin/chuyen-nganh", component: AdminChuyenNganh, layout: layoutAdmin },
 ];
 
 

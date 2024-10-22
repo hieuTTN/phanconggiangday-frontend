@@ -1,5 +1,5 @@
 import lich from '../../assest/images/lich.png'
-import avatar from '../../assest/images/user.jpg'
+import logo from '../../assest/images/logo.png'
 import { useState, useEffect } from 'react'
 import { useLocation, Link } from 'react-router-dom';
 function Header({ children }){
@@ -39,7 +39,8 @@ function Header({ children }){
         <div class="d-flex" id="wrapper">
         <nav id="sidebar" class="bg-dark">
             <div class="sidebar-header p-3 text-white">
-                <h3>Admin <i class="fa fa-bars pointer" id="iconbaradmin" onClick={openClose}></i></h3> 
+            <i class="fa fa-bars pointer" id="iconbaradmin" onClick={openClose}></i>
+            <img src={logo} className='imglogonavbar'/>
             </div>
             <ul class="list-unstyled components">
                 <li className={isActive("/admin/index")}>
@@ -107,6 +108,11 @@ function Header({ children }){
                 <li className={isActive(["/admin/nam-hoc"])}>
                     <a href="nam-hoc" class="text-white text-decoration-none">
                         <i class="fa fa-calendar"></i> Năm học
+                    </a>
+                </li>
+                <li className={isActive(["/admin/chuyen-nganh"])}>
+                    <a href="chuyen-nganh" class="text-white text-decoration-none">
+                        <i class="fa fa-calendar"></i> Chuyên ngành
                     </a>
                 </li>
                 <li>
