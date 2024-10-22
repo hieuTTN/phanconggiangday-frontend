@@ -91,6 +91,7 @@ const AdminHocPhan = ()=>{
                                 <th>Số tiết thực hành</th>
                                 <th>Tổng số tiết</th>
                                 <th>Hệ số</th>
+                                <th>Bộ môn</th>
                                 <th>Chức năng</th>
                             </tr>
                         </thead>
@@ -104,6 +105,7 @@ const AdminHocPhan = ()=>{
                                     <td>{item.soTietThucHanh}</td>
                                     <td>{item.tongSoTiet}</td>
                                     <td>{item.heSo}</td>
+                                    <td>{item.chuyenNganh?.maChuyenNganh}</td>
                                     <td class="sticky-col">
                                         <a href={'add-hoc-phan?mahp='+item.maHP} class="edit-btn"><i className='fa fa-edit'></i></a>
                                         <button onClick={()=>deleteHocPhan(item.maHP)} class="delete-btn"><i className='fa fa-trash'></i></button>

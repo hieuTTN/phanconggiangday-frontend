@@ -75,7 +75,7 @@ const AdminAddUser = ()=>{
                 </div>
                 <div class="col-sm-5">
                     <label class="lb-form">Mật khẩu</label>
-                    <input required name="password" class="form-control"/>
+                    <input required type='password' name="password" class="form-control"/>
                     <label class="lb-form">Quyền</label>
                     <select name='role' class="form-control">
                         {authorities.map((item=>{

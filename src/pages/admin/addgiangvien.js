@@ -16,7 +16,6 @@ async function saveGiangVien(event) {
         "maCB": event.target.elements.maCB.value,
         "tenGV": event.target.elements.tenGV.value,
         "ngaySinh": event.target.elements.ngaySinh.value,
-        "chuyenNganh": event.target.elements.chuyenNganh.value,
         "hocVi": event.target.elements.hocVi.value,
         "chucDanh": event.target.elements.chucDanh.value,
         "donViCongTac": event.target.elements.donViCongTac.value,
@@ -24,6 +23,9 @@ async function saveGiangVien(event) {
         "dangHopDong": event.target.elements.dangHopDong.value,
         "user": {
             "id":event.target.elements.user.value
+        },
+        "chuyenNganh": {
+            maChuyenNganh:event.target.elements.chuyennganh.value
         },
     }
     console.log(payload);
@@ -57,6 +59,9 @@ const AdminAddGiangVien = ()=>{
     const [item, setItem] = useState(null);
     const [user, setUser] = useState([]);
     const [selectUser, setSelectUser] = useState(null);
+    const [chuyenNganh, setChuyenNganh] = useState([]);
+    const [selectedChuyenNganh, setSelectedChuyenNganh] = useState(null);
+
 
     useEffect(()=>{
         const getGiangVien = async() =>{
@@ -67,6 +72,7 @@ const AdminAddGiangVien = ()=>{
                 var result = await response.json();
                 setItem(result)
                 setSelectUser(result.user)
+                setSelectedChuyenNganh(result.chuyenNganh)
             }
         };
         getGiangVien();
@@ -76,6 +82,12 @@ const AdminAddGiangVien = ()=>{
             setUser(result)
         };
         getUser();
+        const getChuyenNganh = async() =>{
+            var response = await getMethod('/api/chuyen-nganh/all/find-all')
+            var result = await response.json();
+            setChuyenNganh(result)
+        };
+        getChuyenNganh();
     }, []);
 
     const setUs= (option) =>{
@@ -101,8 +113,9 @@ const AdminAddGiangVien = ()=>{
                                 <input defaultValue={item?.ngaySinh} name="ngaySinh" type="date" class="form-control"/>
                                 <label class="lb-form">Dạng hợp đồng</label>
                                 <select defaultValue={item?.dangHopDong} name="dangHopDong" class="form-control">
-                                    <option value='Chính thức'>Chính thức</option>
-                                    <option value='Hợp đồng'>Hợp đồng</option>
+                                    <option value='Cơ hữu'>Cơ hữu</option>
+                                    <option value='Mời giảng'>Mời giảng</option>
+                                    <option value='Thính giảng'>Thính giảng</option>
                                 </select>
                                 <label class="lb-form">Chọn tài khoản</label>
                                 <Select
@@ -110,7 +123,7 @@ const AdminAddGiangVien = ()=>{
                                     onChange={setUs}
                                     options={user}
                                     value={selectUser}
-                                    getOptionLabel={(option) => option.email} 
+                                    getOptionLabel={(option) => option.email + " - Quyền: "+option.authorities.description} 
                                     getOptionValue={(option) => option.id}    
                                     closeMenuOnSelect={false}
                                     name='user'
@@ -118,8 +131,18 @@ const AdminAddGiangVien = ()=>{
                                 />
                             </div>
                             <div className='col-md-4'>
-                                <label class="lb-form">Chuyên ngành</label>
-                                <input defaultValue={item?.chuyenNganh} name="chuyenNganh" type="text" class="form-control"/>
+                                <label class="lb-form">Bộ môn</label>
+                                <Select
+                                    className="select-container" 
+                                    onChange={setSelectedChuyenNganh}
+                                    options={chuyenNganh}
+                                    value={selectedChuyenNganh}
+                                    getOptionLabel={(option) => option.maChuyenNganh} 
+                                    getOptionValue={(option) => option.maChuyenNganh}    
+                                    closeMenuOnSelect={false}
+                                    name='chuyennganh'
+                                    placeholder="Chọn chuyên ngành"
+                                />
                                 <label class="lb-form">Học vị</label>
                                 <input defaultValue={item?.hocVi} name="hocVi" type="text" class="form-control"/>
                                 <label class="lb-form">Chức danh</label>

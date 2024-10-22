@@ -130,6 +130,7 @@ const AdminUser = ()=>{
                         <thead>
                             <tr>
                                 <th>id</th>
+                                <th>Ảnh</th>
                                 <th>Email đăng nhập</th>
                                 <th>Họ tên</th>
                                 <th>Ngày tạo</th>
@@ -147,6 +148,7 @@ const AdminUser = ()=>{
                                 }
                                 return  <tr>
                                     <td>{item.id}</td>
+                                    <td><img src={item.avatar} className='imgtable'/></td>
                                     <td>{item.email}</td>
                                     <td>{item.fullName}</td>
                                     <td>{item.createdDate}</td>

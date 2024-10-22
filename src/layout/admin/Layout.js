@@ -43,11 +43,6 @@ function Header({ children }){
             <img src={logo} className='imglogonavbar'/>
             </div>
             <ul class="list-unstyled components">
-                <li className={isActive("/admin/index")}>
-                    <a href="index" class="text-white text-decoration-none">
-                        <i class="fa fa-home"></i> Trang chủ
-                    </a>
-                </li>
                 <li className={isActive(["/admin/user"])}>
                     <a href="#coltaikhoan" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle text-white text-decoration-none">
                         <i class="fa fa-user"></i> Tài khoản
@@ -115,6 +110,19 @@ function Header({ children }){
                         <i class="fa fa-calendar"></i> Chuyên ngành
                     </a>
                 </li>
+                <li className={isActive(["/admin/index", "/admin/add-bai-viet"])}>
+                    <a href="#colbaiviet" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle text-white text-decoration-none">
+                        <i class="fa fa-newspaper"></i> Bài viết
+                    </a>
+                    <ul class="collapse list-unstyleds" id="colbaiviet">
+                        <li class="nav-item">
+                            <a href="index" class="text-white text-decoration-none ps-4"><i class="fa fa-list"></i> Danh sách bài viết</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="add-bai-viet" class="text-white text-decoration-none ps-4"><i class="fa fa-plus"></i> Thêm bài viết</a>
+                        </li>
+                    </ul>
+                </li>
                 <li>
                     <a href="#" onClick={logout} class="text-white text-decoration-none">
                         <i class="fa fa-sign-out"></i> Đăng xuất
@@ -145,7 +153,7 @@ function Header({ children }){
             
                     <div class="dropdown ms-3">
                         <a class="dropdown-toggle d-flex align-items-center text-decoration-none" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="navbar-text me-2">{user?.email}</span>
+                            <span class="navbar-text me-2">Xin chào: {user?.fullName}</span>
                             {/* <img src={user?.avatar} class="rounded-circle" alt="User Avatar"/> */}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">

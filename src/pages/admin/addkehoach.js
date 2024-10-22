@@ -83,7 +83,7 @@ const AdminAddKeHoach = ()=>{
         
         var payload = {
             "id": id,
-            "tongSoNhom": event.target.elements.tongSoNhom.value,
+            "tongSoSinhVien": event.target.elements.tongSoSv.value,
             "soLuongSinhVienNhom": event.target.elements.soLuongSinhVienNhom.value,
             "listMaNganh": strings,
             "khoaHoc": {
@@ -131,8 +131,8 @@ const AdminAddKeHoach = ()=>{
                     <div class="form-add">
                         <form onSubmit={saveKeHoach} class="row" method='post'>
                             <div class="col-md-4 col-sm-12 col-12">
-                                <label class="lb-form">Tổng số nhóm</label>
-                                <input defaultValue={item?.tongSoNhom} name="tongSoNhom" type="text" class="form-control"/>
+                                <label class="lb-form">Tổng số sinh viên</label>
+                                <input defaultValue={item?.tongSoSinhVien} name="tongSoSv" type="text" class="form-control"/>
                                 <label class="lb-form">Số lượng sinh viên nhóm</label>
                                 <input defaultValue={item?.soLuongSinhVienNhom} name="soLuongSinhVienNhom" type="text" class="form-control"/>
                                 <label class="lb-form">Khóa học</label>
@@ -165,7 +165,7 @@ const AdminAddKeHoach = ()=>{
                                     onChange={handleChangeHocPhan}
                                     options={hocPhan}
                                     value={selectHocPhan}
-                                    getOptionLabel={(option) => option.tenHP} 
+                                    getOptionLabel={(option) => "Mã: "+option.maHP+" - "+option.tenHP} 
                                     getOptionValue={(option) => option.maHP}    
                                     closeMenuOnSelect={false}
                                     name='hocPhan'

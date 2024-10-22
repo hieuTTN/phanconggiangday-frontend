@@ -43,37 +43,19 @@ function Header({ children }){
                 <img src={logo} className='imglogonavbar'/>
             </div>
             <ul class="list-unstyled components">
-                <li className={isActive("/teacher/index")}>
+                <li className={isActive("/truongbomon/index")}>
                     <a href="index" class="text-white text-decoration-none">
                         <i class="fa fa-newspaper"></i> Thông báo
                     </a>
                 </li>
-                <li className={isActive(["/teacher/taikhoan","/teacher/doimatkhau"])}>
-                    <a href="#coltaikhoan" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle text-white text-decoration-none">
-                        <i class="fa fa-user"></i> Tài khoản
-                    </a>
-                    <ul class="collapse list-unstyleds" id="coltaikhoan">
-                        <li class="nav-item">
-                            <a href="taikhoan" class="text-white text-decoration-none"><i class="fa fa-list"></i> Tài khoản của tôi</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="doimatkhau" class="text-white text-decoration-none ps-4"><i class="fa fa-lock"></i> Đổi mật khẩu</a>
-                        </li>
-                    </ul>
-                </li>
-                <li className={isActive("/admin/phancong")}>
-                    <a href="phancong" class="text-white text-decoration-none">
-                        <i class="fa fa-calendar"></i> Phân công
+                <li className={isActive(["/truongbomon/thong-tin-ca-nhan"])}>
+                    <a href="thong-tin-ca-nhan" class="text-white text-decoration-none">
+                        <i class="fa fa-user"></i> Thông tin cá nhân
                     </a>
                 </li>
-                <li className={isActive("/admin/bao-cao")}>
-                    <a href="bao-cao" class="text-white text-decoration-none">
-                        <i class="fa fa-list"></i> Báo cáo
-                    </a>
-                </li>
-                <li className={isActive("/admin/giang-day")}>
-                    <a href="giang-day" class="text-white text-decoration-none">
-                        <i class="fa fa-book"></i> Giảng dạy
+                <li className={isActive(["/truongbomon/kehoach"])}>
+                    <a href="kehoach" class="text-white text-decoration-none">
+                        <i class="fa fa-book"></i> Kế hoạch
                     </a>
                 </li>
                 <li>

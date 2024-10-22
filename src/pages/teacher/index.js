@@ -9,7 +9,7 @@ var token = localStorage.getItem("token");
 
 var url = '';
 var size = 12;
-const HomeAdmin = ()=>{
+const HomeTeacher = ()=>{
     const [items, setItems] = useState([]);
     const [pageCount, setpageCount] = useState(0);
     useEffect(()=>{
@@ -93,4 +93,4 @@ const HomeAdmin = ()=>{
        </>
     );
 }
-export default HomeAdmin;
+export default HomeTeacher;

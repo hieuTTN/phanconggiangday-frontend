@@ -14,7 +14,7 @@ var token = localStorage.getItem("token");
 
 var size = 10
 var url = '';
-const AdminKeHoach = ()=>{
+const TruongBoMonKeHoach = ()=>{
     const [items, setItems] = useState([]);
     const [pageCount, setpageCount] = useState(0);
     const [khoahoc, setKhoaHoc] = useState([]);
@@ -30,11 +30,11 @@ const AdminKeHoach = ()=>{
 
     useEffect(()=>{
         const getKeHoach = async() =>{
-            var response = await getMethod('/api/ke-hoach-mo-mon/all/find-all?&size='+size+'&sort=id,desc&page='+0)
+            var response = await getMethod('/api/ke-hoach-mo-mon/head-department/find-by-truong-bo-mon?&size='+size+'&sort=id,desc&page='+0)
             var result = await response.json();
             setItems(result.content)
             setpageCount(result.totalPages)
-            url = '/api/ke-hoach-mo-mon/all/find-all?&size='+size+'&sort=id,desc&page='
+            url = '/api/ke-hoach-mo-mon/head-department/find-by-truong-bo-mon?&size='+size+'&sort=id,desc&page='
         };
         getKeHoach();
         const getSelect = async() =>{
@@ -70,7 +70,7 @@ const AdminKeHoach = ()=>{
         var maHP = selectHocPhan == null?null:selectHocPhan.maHP
         var idNamHoc = selectNamHoc == null?null:selectNamHoc.id
 
-        var uls = '/api/ke-hoach-mo-mon/all/find-all?&size='+size+'&sort=id,desc'
+        var uls = '/api/ke-hoach-mo-mon/head-department/find-by-truong-bo-mon?&size='+size+'&sort=id,desc'
         if(maKhoaHoc != null){
             uls += '&maKhoaHoc='+maKhoaHoc
         }
@@ -89,36 +89,18 @@ const AdminKeHoach = ()=>{
         url = uls
     };
 
-    async function deletekeHoach(id){
-        var con = window.confirm("Bạn chắc chắn muốn xóa kế hoạch này?");
-        if (con == false) {
-            return;
-        }
-        var response = await deleteMethod('/api/ke-hoach-mo-mon/admin/delete?id='+id)
-        if (response.status < 300) {
-            toast.success("xóa thành công!");
-            var response = await getMethod(url+0)
-            var result = await response.json();
-            setItems(result.content)
-            setpageCount(result.totalPages)
-        }
-        if (response.status == 417) {
-            var result = await response.json()
-            toast.warning(result.defaultMessage);
-        }
-    }
 
     async function reloadPage() {
-        var response = await getMethod('/api/ke-hoach-mo-mon/all/find-all?&size='+size+'&sort=id,desc&page='+0)
+        var response = await getMethod('/api/ke-hoach-mo-mon/head-department/find-by-truong-bo-mon?&size='+size+'&sort=id,desc&page='+0)
         var result = await response.json();
         setItems(result.content)
         setpageCount(result.totalPages)
-        url = '/api/ke-hoach-mo-mon/all/find-all?&size='+size+'&sort=id,desc&page='
+        url = '/api/ke-hoach-mo-mon/head-department/find-by-truong-bo-mon?&size='+size+'&sort=id,desc&page='
     }
 
     async function loadDanhSachGv(item) {
         setKeHoach(item)
-        var response = await getMethod('/api/phan-cong-giang-vien/admin/find-by-ke-hoach?keHoachId='+item.id)
+        var response = await getMethod('/api/phan-cong-giang-vien/head-department/find-by-ke-hoach?keHoachId='+item.id)
         var result = await response.json();
         setListKeHoach(result)
     }
@@ -136,7 +118,7 @@ const AdminKeHoach = ()=>{
             },
         };
         
-        const res = await postMethodPayload('/api/phan-cong-giang-vien/admin/add',payload)
+        const res = await postMethodPayload('/api/phan-cong-giang-vien/head-department/add',payload)
         var result = await res.json()
         console.log(result);
         if (res.status == 417) {
@@ -144,7 +126,7 @@ const AdminKeHoach = ()=>{
         }
         if(res.status < 300){
             toast.success("Thành công!");
-            var response = await getMethod('/api/phan-cong-giang-vien/admin/find-by-ke-hoach?keHoachId='+kehoach.id)
+            var response = await getMethod('/api/phan-cong-giang-vien/head-department/find-by-ke-hoach?keHoachId='+kehoach.id)
             var result = await response.json();
             setListKeHoach(result)
         }
@@ -155,10 +137,10 @@ const AdminKeHoach = ()=>{
         if (con == false) {
             return;
         }
-        var response = await deleteMethod('/api/phan-cong-giang-vien/admin/delete?id='+id)
+        var response = await deleteMethod('/api/phan-cong-giang-vien/head-department/delete?id='+id)
         if (response.status < 300) {
             toast.success("xóa thành công!");
-            var response = await getMethod('/api/phan-cong-giang-vien/admin/find-by-ke-hoach?keHoachId='+kehoach.id)
+            var response = await getMethod('/api/phan-cong-giang-vien/head-department/find-by-ke-hoach?keHoachId='+kehoach.id)
             var result = await response.json();
             setListKeHoach(result)
         }
@@ -223,8 +205,7 @@ const AdminKeHoach = ()=>{
                                 <th>Bộ môn</th>
                                 <th>Năm học</th>
                                 <th>Khóa học</th>
-                                <th>Tổng số sinh viên</th>
-                                <th>Số lượng sinh viên/nhóm</th>
+                                <th>Số lượng sinh viên</th>
                                 <th>Tổng số nhóm</th>
                                 <th>Chức năng</th>
                             </tr>
@@ -233,7 +214,7 @@ const AdminKeHoach = ()=>{
                             {items.map((item=>{
                                 return  <tr>
                                     <td>{item.hocPhan.maHP}</td>
-                                    <td><a target='_blank' className='pointer' href={'add-hoc-phan?mahp='+item.hocPhan.maHP}>{item.hocPhan.tenHP}</a></td>
+                                    <td>{item.hocPhan.tenHP}</td>
                                     <td>{item.hocPhan.chuyenNganh?.tenChuyenNganh}</td>
                                     <td>{item.namHoc.hocKy}, {item.namHoc.tenNamHoc}</td>
                                     <td>{item.khoaHoc.tenKhoaHoc}<br/>
@@ -243,12 +224,9 @@ const AdminKeHoach = ()=>{
                                         </span>
                                     })}
                                     </td>
-                                    <td>{item.tongSoSinhVien}</td>
                                     <td>{item.soLuongSinhVienNhom}</td>
                                     <td>{item.tongSoNhom}</td>
                                     <td class="sticky-col">
-                                        <a href={'add-ke-hoach?id='+item.id} class="edit-btn"><i className='fa fa-edit'></i></a>
-                                        <button onClick={()=>deletekeHoach(item.id)} class="delete-btn"><i className='fa fa-trash'></i></button>
                                         <button onClick={()=>loadDanhSachGv(item)} data-bs-toggle="modal" data-bs-target="#addtk" class="edit-btn"><i className='fa fa-user-plus'></i></button>
                                     </td>
                                 </tr>
@@ -344,4 +322,4 @@ const AdminKeHoach = ()=>{
     );
 }
 
-export default AdminKeHoach;
+export default TruongBoMonKeHoach;

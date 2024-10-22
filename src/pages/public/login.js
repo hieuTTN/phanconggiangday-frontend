@@ -46,13 +46,13 @@ async function processLogin(user, token) {
         window.location.href = '/';
     }
     if (user.authorities.name === "ROLE_HEAD_DEPARTMENT") {
-        window.location.href = '/';
+        window.location.href = '/truongbomon/index';
     }
     if (user.authorities.name === "ROLE_SPECIALIST") {
         window.location.href = '/';
     }
     if (user.authorities.name === "ROLE_TEACHER") {
-        window.location.href = '/teacher/taikhoan';
+        window.location.href = '/teacher/index';
     }
 }
 

@@ -87,12 +87,13 @@ const AdminGiangVien = ()=>{
                                 <th>Mã giảng viên</th>
                                 <th>Tên giảng viên</th>
                                 <th>Ngày sinh</th>
-                                <th>Chuyên ngành</th>
+                                <th>Bộ môn</th>
                                 <th>Học vị</th>
                                 <th>Chức danh</th>
                                 <th>Đơn vị công tác</th>
                                 <th>Số điện thoại</th>
                                 <th>Loại hợp đồng</th>
+                                <th>Loại tài khoản</th>
                                 <th>Chức năng</th>
                             </tr>
                         </thead>
@@ -102,12 +103,13 @@ const AdminGiangVien = ()=>{
                                     <td>{item.maCB}</td>
                                     <td>{item.tenGV}</td>
                                     <td>{item.ngaySinh}</td>
-                                    <td>{item.chuyenNganh}</td>
+                                    <td>{item.chuyenNganh?.maChuyenNganh}</td>
                                     <td>{item.hocVi}</td>
                                     <td>{item.chucDanh}</td>
                                     <td>{item.donViCongTac}</td>
                                     <td>{item.dienThoai}</td>
                                     <td>{item.dangHopDong}</td>
+                                    <td>{item.user.authorities.description}</td>
                                     <td class="sticky-col">
                                         <a href={'add-giang-vien?macb='+item.maCB} class="edit-btn"><i className='fa fa-edit'></i></a>
                                         <button onClick={()=>deleteGiangVien(item.maCB)} class="delete-btn"><i className='fa fa-trash'></i></button>

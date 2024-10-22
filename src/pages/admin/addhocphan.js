@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import $ from 'jquery'; 
 import Swal from 'sweetalert2'
 import {getMethod,postMethodPayload, deleteMethod} from '../../services/request';
-
+import Select from 'react-select';
 
 async function saveHocPhan(event) {
     event.preventDefault();
@@ -19,6 +19,9 @@ async function saveHocPhan(event) {
         "soTietThucHanh": event.target.elements.soTietThucHanh.value,
         "tongSoTiet": event.target.elements.tongSoTiet.value,
         "heSo": event.target.elements.heSo.value,
+        "chuyenNganh": {
+            maChuyenNganh:event.target.elements.chuyennganh.value
+        },
     }
     var url = '/api/hoc-phan/admin/add'
     if(mahp != null){
@@ -47,6 +50,8 @@ async function saveHocPhan(event) {
 
 const AdminAddHocPhan = ()=>{
     const [hocphan, setHocPhan] = useState(null);
+    const [chuyenNganh, setChuyenNganh] = useState([]);
+    const [selectedChuyenNganh, setSelectedChuyenNganh] = useState(null);
 
     useEffect(()=>{
         const getHocPhan = async() =>{
@@ -56,9 +61,16 @@ const AdminAddHocPhan = ()=>{
                 var response = await getMethod('/api/hoc-phan/all/find-by-mahp?maHp='+mahp)
                 var result = await response.json();
                 setHocPhan(result)
+                setSelectedChuyenNganh(result.chuyenNganh)
             }
         };
         getHocPhan();
+        const getChuyenNganh = async() =>{
+            var response = await getMethod('/api/chuyen-nganh/all/find-all')
+            var result = await response.json();
+            setChuyenNganh(result)
+        };
+        getChuyenNganh();
     }, []);
 
     
@@ -79,6 +91,18 @@ const AdminAddHocPhan = ()=>{
                                 <input defaultValue={hocphan?.tenHP} name="tenHP" type="text" class="form-control"/>
                                 <label class="lb-form">Số tín chỉ</label>
                                 <input defaultValue={hocphan?.soTinChi} name="soTinChi" type="text" class="form-control"/>
+                                <label class="lb-form">Bộ môn</label>
+                                <Select
+                                    className="select-container" 
+                                    onChange={setSelectedChuyenNganh}
+                                    options={chuyenNganh}
+                                    value={selectedChuyenNganh}
+                                    getOptionLabel={(option) => option.maChuyenNganh} 
+                                    getOptionValue={(option) => option.maChuyenNganh}    
+                                    closeMenuOnSelect={false}
+                                    name='chuyennganh'
+                                    placeholder="Chọn chuyên ngành"
+                                />
                             </div>
                             <div className='col-md-4'>
                                 <label class="lb-form">Số tiết lý thuyết</label>

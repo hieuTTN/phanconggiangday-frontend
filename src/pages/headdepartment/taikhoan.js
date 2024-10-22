@@ -17,7 +17,7 @@ async function capNhatInfor(event) {
         "donViCongTac": event.target.elements.donViCongTac.value,
         "dienThoai": event.target.elements.dienThoai.value,
     }
-    const response = await postMethodPayload('/api/giang-vien/teacher/cap-nhat-thong-tin', payload)
+    const response = await postMethodPayload('/api/giang-vien/head-department/cap-nhat-thong-tin', payload)
     if (response.status < 300) {
         Swal.fire({
             title: "Thông báo",
@@ -38,11 +38,11 @@ async function capNhatInfor(event) {
     }
 }
 
-function TeacherInfor(){
+function TeacherInforTBM(){
     const [teacher, setTeacher] = useState(null);
     useEffect(()=>{
         const getInfor = async() =>{
-            var response = await getMethod("/api/giang-vien/teacher/thong-tin-cua-toi")
+            var response = await getMethod("/api/giang-vien/head-department/thong-tin-cua-toi")
             var result = await response.json();
             setTeacher(result)
         };
@@ -88,4 +88,4 @@ function TeacherInfor(){
     </>
     );
 }
-export default TeacherInfor;
+export default TeacherInforTBM;
