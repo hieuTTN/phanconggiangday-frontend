@@ -10,8 +10,9 @@ import Select from 'react-select';
 async function saveHocPhan(event) {
     event.preventDefault();
     var uls = new URL(document.URL)
-    var mahp = uls.searchParams.get("mahp");
+    var id = uls.searchParams.get("id");
     var payload = {
+        "id": id,
         "maHP": event.target.elements.maHP.value,
         "tenHP": event.target.elements.tenHP.value,
         "soTinChi": event.target.elements.soTinChi.value,
@@ -19,12 +20,12 @@ async function saveHocPhan(event) {
         "soTietThucHanh": event.target.elements.soTietThucHanh.value,
         "tongSoTiet": event.target.elements.tongSoTiet.value,
         "heSo": event.target.elements.heSo.value,
-        "chuyenNganh": {
-            maChuyenNganh:event.target.elements.chuyennganh.value
+        "boMon": {
+            id:event.target.elements.bomon.value
         },
     }
     var url = '/api/hoc-phan/admin/add'
-    if(mahp != null){
+    if(id != null){
         url = '/api/hoc-phan/admin/update'
     }
     const response = await postMethodPayload(url, payload)
@@ -50,27 +51,27 @@ async function saveHocPhan(event) {
 
 const AdminAddHocPhan = ()=>{
     const [hocphan, setHocPhan] = useState(null);
-    const [chuyenNganh, setChuyenNganh] = useState([]);
-    const [selectedChuyenNganh, setSelectedChuyenNganh] = useState(null);
+    const [boMon, setBoMon] = useState([]);
+    const [selectedBoMon, setSelectedBoMon] = useState(null);
 
     useEffect(()=>{
         const getHocPhan = async() =>{
             var uls = new URL(document.URL)
-            var mahp = uls.searchParams.get("mahp");
-            if(mahp != null){
-                var response = await getMethod('/api/hoc-phan/all/find-by-mahp?maHp='+mahp)
+            var id = uls.searchParams.get("id");
+            if(id != null){
+                var response = await getMethod('/api/hoc-phan/all/find-by-id?id='+id)
                 var result = await response.json();
                 setHocPhan(result)
-                setSelectedChuyenNganh(result.chuyenNganh)
+                setSelectedBoMon(result.boMon)
             }
         };
         getHocPhan();
-        const getChuyenNganh = async() =>{
-            var response = await getMethod('/api/chuyen-nganh/all/find-all')
+        const getBoMon = async() =>{
+            var response = await getMethod('/api/bomon/all/find-all')
             var result = await response.json();
-            setChuyenNganh(result)
+            setBoMon(result)
         };
-        getChuyenNganh();
+        getBoMon();
     }, []);
 
     
@@ -94,14 +95,14 @@ const AdminAddHocPhan = ()=>{
                                 <label class="lb-form">Bộ môn</label>
                                 <Select
                                     className="select-container" 
-                                    onChange={setSelectedChuyenNganh}
-                                    options={chuyenNganh}
-                                    value={selectedChuyenNganh}
-                                    getOptionLabel={(option) => option.maChuyenNganh} 
-                                    getOptionValue={(option) => option.maChuyenNganh}    
+                                    onChange={setSelectedBoMon}
+                                    options={boMon}
+                                    value={selectedBoMon}
+                                    getOptionLabel={(option) => option.tenBoMon} 
+                                    getOptionValue={(option) => option.id}    
                                     closeMenuOnSelect={false}
-                                    name='chuyennganh'
-                                    placeholder="Chọn chuyên ngành"
+                                    name='bomon'
+                                    placeholder="Chọn bộ môn"
                                 />
                             </div>
                             <div className='col-md-4'>

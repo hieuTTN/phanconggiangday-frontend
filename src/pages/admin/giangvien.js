@@ -45,12 +45,12 @@ const AdminGiangVien = ()=>{
         url = '/api/giang-vien/all/find-all?&size='+size+'&sort=maCB,desc&search='+search+'&page='
     };
 
-    async function deleteGiangVien(macb){
-        var con = window.confirm("Bạn chắc chắn muốn xóa giảng viên "+macb+"?");
+    async function deleteGiangVien(id){
+        var con = window.confirm("Bạn chắc chắn muốn xóa giảng viên này?");
         if (con == false) {
             return;
         }
-        var response = await deleteMethod('/api/giang-vien/admin/delete?maCb='+macb)
+        var response = await deleteMethod('/api/giang-vien/admin/delete?id='+id)
         if (response.status < 300) {
             toast.success("xóa thành công!");
             var response = await getMethod(url+0)
@@ -109,10 +109,10 @@ const AdminGiangVien = ()=>{
                                     <td>{item.donViCongTac}</td>
                                     <td>{item.dienThoai}</td>
                                     <td>{item.dangHopDong}</td>
-                                    <td>{item.user.authorities.description}</td>
+                                    <td>{item.user?.authorities.description}</td>
                                     <td class="sticky-col">
-                                        <a href={'add-giang-vien?macb='+item.maCB} class="edit-btn"><i className='fa fa-edit'></i></a>
-                                        <button onClick={()=>deleteGiangVien(item.maCB)} class="delete-btn"><i className='fa fa-trash'></i></button>
+                                        <a href={'add-giang-vien?id='+item.id} class="edit-btn"><i className='fa fa-edit'></i></a>
+                                        <button onClick={()=>deleteGiangVien(item.id)} class="delete-btn"><i className='fa fa-trash'></i></button>
                                     </td>
                                 </tr>
                             }))}

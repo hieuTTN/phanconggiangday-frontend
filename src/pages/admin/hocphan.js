@@ -16,7 +16,7 @@ var url = '';
 const AdminHocPhan = ()=>{
     const [items, setItems] = useState([]);
     const [pageCount, setpageCount] = useState(0);
-
+    const [boMon, setBoMon] = useState([]);
     useEffect(()=>{
         const getKhoaHoc = async() =>{
             var response = await getMethod('/api/hoc-phan/all/find-all?&size='+size+'&sort=maHP,desc&page='+0)
@@ -26,6 +26,12 @@ const AdminHocPhan = ()=>{
             url = '/api/hoc-phan/all/find-all?&size='+size+'&sort=maHP,desc&page='
         };
         getKhoaHoc();
+        const getBoMon = async() =>{
+            var response = await getMethod('/api/bomon/all/find-all')
+            var result = await response.json();
+            setBoMon(result)
+        };
+        getBoMon();
     }, []);
 
     const handlePageClick = async (data)=>{
@@ -45,12 +51,12 @@ const AdminHocPhan = ()=>{
         url = '/api/hoc-phan/all/find-all?&size='+size+'&sort=maHP,desc&search='+search+'&page='
     };
 
-    async function deleteHocPhan(mahp){
-        var con = window.confirm("Bạn chắc chắn muốn xóa học phần "+mahp+"?");
+    async function deleteHocPhan(id){
+        var con = window.confirm("Bạn chắc chắn muốn xóa học phần này?");
         if (con == false) {
             return;
         }
-        var response = await deleteMethod('/api/hoc-phan/admin/delete?maHp='+mahp)
+        var response = await deleteMethod('/api/hoc-phan/admin/delete?id='+id)
         if (response.status < 300) {
             toast.success("xóa thành công!");
             var response = await getMethod(url+0)
@@ -105,10 +111,10 @@ const AdminHocPhan = ()=>{
                                     <td>{item.soTietThucHanh}</td>
                                     <td>{item.tongSoTiet}</td>
                                     <td>{item.heSo}</td>
-                                    <td>{item.chuyenNganh?.maChuyenNganh}</td>
+                                    <td>{item.boMon?.tenBoMon}</td>
                                     <td class="sticky-col">
-                                        <a href={'add-hoc-phan?mahp='+item.maHP} class="edit-btn"><i className='fa fa-edit'></i></a>
-                                        <button onClick={()=>deleteHocPhan(item.maHP)} class="delete-btn"><i className='fa fa-trash'></i></button>
+                                        <a href={'add-hoc-phan?id='+item.id} class="edit-btn"><i className='fa fa-edit'></i></a>
+                                        <button onClick={()=>deleteHocPhan(item.id)} class="delete-btn"><i className='fa fa-trash'></i></button>
                                     </td>
                                 </tr>
                             }))}

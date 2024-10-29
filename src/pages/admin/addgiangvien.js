@@ -11,8 +11,9 @@ import Select from 'react-select';
 async function saveGiangVien(event) {
     event.preventDefault();
     var uls = new URL(document.URL)
-    var macb = uls.searchParams.get("macb");
+    var id = uls.searchParams.get("id");
     var payload = {
+        "id": id,
         "maCB": event.target.elements.maCB.value,
         "tenGV": event.target.elements.tenGV.value,
         "ngaySinh": event.target.elements.ngaySinh.value,
@@ -24,14 +25,14 @@ async function saveGiangVien(event) {
         "user": {
             "id":event.target.elements.user.value
         },
-        "chuyenNganh": {
-            maChuyenNganh:event.target.elements.chuyennganh.value
+        "boMon": {
+            id:event.target.elements.bomon.value
         },
     }
     console.log(payload);
     
     var url = '/api/giang-vien/admin/add'
-    if(macb != null){
+    if(id != null){
         url = '/api/giang-vien/admin/update'
     }
     const response = await postMethodPayload(url, payload)
@@ -59,20 +60,19 @@ const AdminAddGiangVien = ()=>{
     const [item, setItem] = useState(null);
     const [user, setUser] = useState([]);
     const [selectUser, setSelectUser] = useState(null);
-    const [chuyenNganh, setChuyenNganh] = useState([]);
-    const [selectedChuyenNganh, setSelectedChuyenNganh] = useState(null);
-
+    const [boMon, setBoMon] = useState([]);
+    const [selectedBoMon, setSelectedBoMon] = useState(null);
 
     useEffect(()=>{
         const getGiangVien = async() =>{
             var uls = new URL(document.URL)
-            var macb = uls.searchParams.get("macb");
-            if(macb != null){
-                var response = await getMethod('/api/giang-vien/all/find-by-macb?maCb='+macb)
+            var id = uls.searchParams.get("id");
+            if(id != null){
+                var response = await getMethod('/api/giang-vien/all/find-by-id?id='+id)
                 var result = await response.json();
                 setItem(result)
                 setSelectUser(result.user)
-                setSelectedChuyenNganh(result.chuyenNganh)
+                setSelectedBoMon(result.boMon)
             }
         };
         getGiangVien();
@@ -82,12 +82,12 @@ const AdminAddGiangVien = ()=>{
             setUser(result)
         };
         getUser();
-        const getChuyenNganh = async() =>{
-            var response = await getMethod('/api/chuyen-nganh/all/find-all')
+        const getBoMon = async() =>{
+            var response = await getMethod('/api/bomon/all/find-all')
             var result = await response.json();
-            setChuyenNganh(result)
+            setBoMon(result)
         };
-        getChuyenNganh();
+        getBoMon();
     }, []);
 
     const setUs= (option) =>{
@@ -134,14 +134,14 @@ const AdminAddGiangVien = ()=>{
                                 <label class="lb-form">Bộ môn</label>
                                 <Select
                                     className="select-container" 
-                                    onChange={setSelectedChuyenNganh}
-                                    options={chuyenNganh}
-                                    value={selectedChuyenNganh}
-                                    getOptionLabel={(option) => option.maChuyenNganh} 
-                                    getOptionValue={(option) => option.maChuyenNganh}    
+                                    onChange={setSelectedBoMon}
+                                    options={boMon}
+                                    value={selectedBoMon}
+                                    getOptionLabel={(option) => option.tenBoMon} 
+                                    getOptionValue={(option) => option.id}    
                                     closeMenuOnSelect={false}
-                                    name='chuyennganh'
-                                    placeholder="Chọn chuyên ngành"
+                                    name='bomon'
+                                    placeholder="Chọn bộ môn"
                                 />
                                 <label class="lb-form">Học vị</label>
                                 <input defaultValue={item?.hocVi} name="hocVi" type="text" class="form-control"/>
