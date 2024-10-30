@@ -100,6 +100,11 @@ function Header({ children }){
                         <i class="fa fa-graduation-cap"></i> Khóa học
                     </a>
                 </li>
+                <li className={isActive(["/admin/lop-hoc"])}>
+                    <a href="lop-hoc" class="text-white text-decoration-none">
+                        <i class="fa fa-graduation-cap"></i> Lớp học
+                    </a>
+                </li>
                 <li className={isActive(["/admin/nam-hoc"])}>
                     <a href="nam-hoc" class="text-white text-decoration-none">
                         <i class="fa fa-calendar"></i> Năm học

@@ -19,6 +19,7 @@ import AdminKeHoachHoc from '../pages/admin/kehoachhoc'
 import AdminAddBaiViet from '../pages/admin/addbaiviet'
 import AdminChiTietTinTuc from '../pages/admin/chitiettintuc'
 import AdminChiTietHoc from '../pages/admin/chitiethoc'
+import AdminLopHoc from '../pages/admin/lophoc'
 
 
 //public
@@ -82,6 +83,7 @@ const adminRoutes = [
     { path: "/admin/add-bai-viet", component: AdminAddBaiViet, layout: layoutAdmin },
     { path: "/admin/chi-tiet-tin-tuc", component: AdminChiTietTinTuc, layout: layoutAdmin },
     { path: "/admin/chi-tiet-hoc", component: AdminChiTietHoc, layout: layoutAdmin },
+    { path: "/admin/lop-hoc", component: AdminLopHoc, layout: layoutAdmin },
 ];
 
 

@@ -14,7 +14,7 @@ async function handleAddGiangDay(event) {
     
     const payload = {
         hocPhan: {
-            maHP:event.target.elements.hocphan.value
+            id:event.target.elements.hocphan.value
         },
     };
     const res = await postMethodPayload('/api/giang-vien-hoc-phan/teacher/add', payload);
@@ -38,6 +38,7 @@ var url = '';
 const TeacherGiangDay = ()=>{
     const [items, setItems] = useState([]);
     const [monHoc, setMonHoc] = useState([]);
+    const [teacher, setTeacher] = useState(null);
     const [pageCount, setpageCount] = useState(0);
     useEffect(()=>{
         const getGiangDay = async() =>{
@@ -49,11 +50,17 @@ const TeacherGiangDay = ()=>{
         };
         getGiangDay();
         const getSelect = async() =>{
-            var response = await getMethod('/api/hoc-phan/all/find-all-list')
+            var response = await getMethod('/api/hoc-phan/teacher/find-by-giang-vien-bo-mon')
             var result = await response.json();
             setMonHoc(result)
         };
         getSelect();
+        const getInfor = async() =>{
+            var response = await getMethod("/api/giang-vien/teacher/thong-tin-cua-toi")
+            var result = await response.json();
+            setTeacher(result)
+        };
+        getInfor();
     }, []);
 
     const handlePageClick = async (data)=>{
@@ -88,14 +95,14 @@ const TeacherGiangDay = ()=>{
     return (
         <>
             <div class="headerpageadmin d-flex justify-content-between align-items-center p-3 bg-light border">
-                <strong class="text-left"><i className='fa fa-users'></i> Học Phần giảng dạy</strong>
+                <strong class="text-left"><i className='fa fa-users'></i> Học Phần giảng dạy {teacher?.boMon.tenBoMon}</strong>
                 <div class="search-wrapper d-flex align-items-center">
                     <button  data-bs-toggle="modal" data-bs-target="#addtk" className='btn btn-primary selectheader'><i class="fa fa-plus"></i></button>
                 </div>
             </div>
             <div class="tablediv">
                 <div class="headertable">
-                    <span class="lbtable">Danh sách học phần giảng dạy</span>
+                    <span class="lbtable">Danh sách học phần giảng dạy </span>
                 </div>
                 <div class="divcontenttable">
                     <table id="example" class="table table-bordered">
@@ -146,7 +153,7 @@ const TeacherGiangDay = ()=>{
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Thêm môn học giảng dạy</h5> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+                        <h5 class="modal-title" id="exampleModalLabel">Thêm môn học giảng dạy {teacher?.boMon.tenBoMon}</h5> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
                         <div class="modal-body row">
                             <form method='post' onSubmit={handleAddGiangDay} className='row'>
                                 <div className='col-sm-12'>
@@ -155,7 +162,7 @@ const TeacherGiangDay = ()=>{
                                         className="select-container selectheader" 
                                         options={monHoc}
                                         getOptionLabel={(option) => option.maHP + " - "+option.tenHP} 
-                                        getOptionValue={(option) => option.maHP}    
+                                        getOptionValue={(option) => option.id}    
                                         closeMenuOnSelect={false}
                                         name='hocphan'
                                         placeholder="Chọn học phần"

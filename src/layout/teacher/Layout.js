@@ -2,6 +2,7 @@ import lich from '../../assest/images/lich.png'
 import logo from '../../assest/images/logo.png'
 import { useState, useEffect } from 'react'
 import { useLocation, Link } from 'react-router-dom';
+import {getMethod} from '../../services/request';
 function Header({ children }){
      // Ensure useLocation is called at the top level of the component
      const location = useLocation();
@@ -17,8 +18,15 @@ function Header({ children }){
      };
      
     const [isCssLoaded, setCssLoaded] = useState(false);
+    const [tenBoMon, setTenBoMon] = useState("");
     useEffect(()=>{
         import('../admin/layout.scss').then(() => setCssLoaded(true));
+        const getTenBoMon = async() =>{
+            var response = await getMethod('/api/giang-vien/teacher/bo-mon-cua-toi')
+            var result = await response.text();
+            setTenBoMon(result)
+        };
+        getTenBoMon();
     }, []);
     if (!isCssLoaded) {
         return <></>
@@ -103,7 +111,9 @@ function Header({ children }){
                             <li><a class="dropdown-item" href="#">View all notifications</a></li>
                         </ul>
                     </div>
-            
+                    <div class="dropdown ms-3">
+                        {tenBoMon}
+                    </div>
                     <div class="dropdown ms-3">
                         <a class="dropdown-toggle d-flex align-items-center text-decoration-none" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                             <span class="navbar-text me-2">Xin chào: {user?.fullName}</span>
