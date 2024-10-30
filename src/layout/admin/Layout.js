@@ -105,9 +105,9 @@ function Header({ children }){
                         <i class="fa fa-calendar"></i> Năm học
                     </a>
                 </li>
-                <li className={isActive(["/admin/chuyen-nganh"])}>
-                    <a href="chuyen-nganh" class="text-white text-decoration-none">
-                        <i class="fa fa-calendar"></i> Chuyên ngành
+                <li className={isActive(["/admin/ke-hoach-hoc"])}>
+                    <a href="ke-hoach-hoc" class="text-white text-decoration-none">
+                        <i class="fa fa-calendar"></i> Kế hoạch học
                     </a>
                 </li>
                 <li className={isActive(["/admin/index", "/admin/add-bai-viet"])}>

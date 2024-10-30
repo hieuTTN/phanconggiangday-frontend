@@ -15,9 +15,10 @@ import AdminGiangVien from '../pages/admin/giangvien'
 import AdminAddGiangVien from '../pages/admin/addgiangvien'
 import AdminKeHoach from '../pages/admin/kehoach'
 import AdminAddKeHoach from '../pages/admin/addkehoach'
-import AdminChuyenNganh from '../pages/admin/chuyennganh'
+import AdminKeHoachHoc from '../pages/admin/kehoachhoc'
 import AdminAddBaiViet from '../pages/admin/addbaiviet'
 import AdminChiTietTinTuc from '../pages/admin/chitiettintuc'
+import AdminChiTietHoc from '../pages/admin/chitiethoc'
 
 
 //public
@@ -77,9 +78,10 @@ const adminRoutes = [
     { path: "/admin/add-giang-vien", component: AdminAddGiangVien, layout: layoutAdmin },
     { path: "/admin/ke-hoach", component: AdminKeHoach, layout: layoutAdmin },
     { path: "/admin/add-ke-hoach", component: AdminAddKeHoach, layout: layoutAdmin },
-    { path: "/admin/chuyen-nganh", component: AdminChuyenNganh, layout: layoutAdmin },
+    { path: "/admin/ke-hoach-hoc", component: AdminKeHoachHoc, layout: layoutAdmin },
     { path: "/admin/add-bai-viet", component: AdminAddBaiViet, layout: layoutAdmin },
     { path: "/admin/chi-tiet-tin-tuc", component: AdminChiTietTinTuc, layout: layoutAdmin },
+    { path: "/admin/chi-tiet-hoc", component: AdminChiTietHoc, layout: layoutAdmin },
 ];
 
 
