@@ -30,11 +30,11 @@ const AdminKeHoach = ()=>{
 
     useEffect(()=>{
         const getKeHoach = async() =>{
-            var response = await getMethod('/api/ke-hoach-mo-mon/all/find-all?&size='+size+'&sort=id,desc&page='+0)
-            var result = await response.json();
-            setItems(result.content)
-            setpageCount(result.totalPages)
-            url = '/api/ke-hoach-mo-mon/all/find-all?&size='+size+'&sort=id,desc&page='
+            // var response = await getMethod('/api/ke-hoach-mo-mon/all/find-all?&size='+size+'&sort=id,desc&page='+0)
+            // var result = await response.json();
+            // setItems(result.content)
+            // setpageCount(result.totalPages)
+            // url = '/api/ke-hoach-mo-mon/all/find-all?&size='+size+'&sort=id,desc&page='
         };
         getKeHoach();
         const getSelect = async() =>{
