@@ -17,9 +17,7 @@ var url = '';
 const TruongBoMonKeHoach = ()=>{
     const [items, setItems] = useState([]);
     const [pageCount, setpageCount] = useState(0);
-    const [khoahoc, setKhoaHoc] = useState([]);
     const [namHoc, setnamHoc] = useState([]);
-    const [hocPhan, sethocPhan] = useState([]);
     const [selectKhoaHoc, setSelectKhoaHoc] = useState(null);
     const [selectNamHoc, setSelectNamHoc] = useState(null);
     const [selectHocPhan, setSelectHocPhan] = useState(null);
@@ -27,26 +25,14 @@ const TruongBoMonKeHoach = ()=>{
     const [selectGiangVien, setSelectGiangVien] = useState(null);
     const [kehoach, setKeHoach] = useState(null);
     const [listKeHoach, setListKeHoach] = useState([]);
+    const [totalElement, setTotalElement] = useState(0);
 
     useEffect(()=>{
-        const getKeHoach = async() =>{
-            var response = await getMethod('/api/ke-hoach-mo-mon/head-department/find-by-truong-bo-mon?&size='+size+'&sort=id,desc&page='+0)
-            var result = await response.json();
-            setItems(result.content)
-            setpageCount(result.totalPages)
-            url = '/api/ke-hoach-mo-mon/head-department/find-by-truong-bo-mon?&size='+size+'&sort=id,desc&page='
-        };
-        getKeHoach();
         const getSelect = async() =>{
-            var response = await getMethod('/api/khoa-hoc/all/find-all-list')
-            var result = await response.json();
-            setKhoaHoc(result)
             var response = await getMethod('/api/nam-hoc/all/find-all-list')
             var result = await response.json();
             setnamHoc(result)
-            var response = await getMethod('/api/hoc-phan/all/find-all-list')
-            var result = await response.json();
-            sethocPhan(result)
+            getKeHoachChiTiet(result[result.length-1].id)
         };
         getSelect();
         const getGiangVien = async() =>{
@@ -57,6 +43,20 @@ const TruongBoMonKeHoach = ()=>{
         getGiangVien();
     }, []);
 
+    const getKeHoachChiTiet = async(idnamhoc, search) =>{
+        var urlfr = '/api/ke-hoach-chi-tiet/head-department/find-by-namHoc?&size='+size+'&idNamHoc='+idnamhoc+'&sort=tongSoNhom,asc'
+        if(search != null && search != undefined){
+            urlfr += '&search='+search
+        }
+        urlfr += '&page='
+        url = urlfr;
+        var response = await getMethod(urlfr+0)
+        var result = await response.json();
+        setTotalElement(result.totalElements);
+        setItems(result.content)
+        setpageCount(result.totalPages)
+    };
+
     const handlePageClick = async (data)=>{
         var currentPage = data.selected
         var response = await getMethod(url+currentPage)
@@ -66,37 +66,18 @@ const TruongBoMonKeHoach = ()=>{
     }
 
     const locKeHoach = async() =>{
-        var maKhoaHoc = selectKhoaHoc == null?null:selectKhoaHoc.maKhoaHoc
-        var maHP = selectHocPhan == null?null:selectHocPhan.maHP
-        var idNamHoc = selectNamHoc == null?null:selectNamHoc.id
-
-        var uls = '/api/ke-hoach-mo-mon/head-department/find-by-truong-bo-mon?&size='+size+'&sort=id,desc'
-        if(maKhoaHoc != null){
-            uls += '&maKhoaHoc='+maKhoaHoc
-        }
-        if(maHP != null){
-            uls += '&maHP='+maHP
-        }
-        if(idNamHoc != null){
-            uls += '&idNamHoc='+idNamHoc
-        }
-        uls += '&page='
-        url = uls
-        var response = await getMethod(uls+0)
-        var result = await response.json();
-        setItems(result.content)
-        setpageCount(result.totalPages)
-        url = uls
+        getKeHoachChiTiet(selectNamHoc.id)
     };
 
-
-    async function reloadPage() {
-        var response = await getMethod('/api/ke-hoach-mo-mon/head-department/find-by-truong-bo-mon?&size='+size+'&sort=id,desc&page='+0)
-        var result = await response.json();
-        setItems(result.content)
-        setpageCount(result.totalPages)
-        url = '/api/ke-hoach-mo-mon/head-department/find-by-truong-bo-mon?&size='+size+'&sort=id,desc&page='
-    }
+    const searchKeHoach = async() =>{
+        var search = document.getElementById("search").value
+        if(search != ""){
+            getKeHoachChiTiet(selectNamHoc.id, search)
+        }
+        else{
+            getKeHoachChiTiet(selectNamHoc.id)
+        }
+    };
 
     async function loadDanhSachGv(item) {
         setKeHoach(item)
@@ -153,19 +134,10 @@ const TruongBoMonKeHoach = ()=>{
     return (
         <>
             <div class="headerpageadmin d-flex justify-content-between align-items-center p-3 bg-light border">
-                <strong class="text-left"><i className='fa fa-users'></i> Quản Lý Kế Hoạch</strong>
+                <strong class="text-left"><i className='fa fa-users'></i> Quản Lý Kế Hoạch - tìm thấy {totalElement} học phần</strong>
                 <div class="search-wrapper d-flex align-items-center">
                     <div className='d-flex divngayadmin'>   
-                        <Select
-                            className="select-container" 
-                            options={khoahoc}
-                            onChange={setSelectKhoaHoc}
-                            getOptionLabel={(option) => option.tenKhoaHoc} 
-                            getOptionValue={(option) => option.maKhoaHoc}    
-                            closeMenuOnSelect={false}
-                            id='khoaHoc'
-                            placeholder="Chọn khóa học"
-                        />
+                        <input onKeyUp={searchKeHoach} id='search' placeholder='Nhập mã hoặc tên môn học' className='selectheader'/>  
                         <Select
                             className="select-container selectheader" 
                             options={namHoc}
@@ -176,18 +148,7 @@ const TruongBoMonKeHoach = ()=>{
                             id='namHoc'
                             placeholder="Chọn năm học"
                         />
-                        <Select
-                            className="select-container selectheader" 
-                            options={hocPhan}
-                            onChange={setSelectHocPhan}
-                            getOptionLabel={(option) => option.tenHP} 
-                            getOptionValue={(option) => option.maHP}    
-                            closeMenuOnSelect={false}
-                            id='hocPhan'
-                            placeholder="Chọn học phần"
-                        />
                         <button onClick={locKeHoach} className='btn btn-primary selectheader'>Lọc</button>
-                        <button onClick={()=>reloadPage()} className='btn btn-primary selectheader'><i class="fa fa-refresh"></i></button>
                     </div>
                     <a href='add-ke-hoach' class="btn btn-primary ms-2"><i className='fa fa-plus'></i></a>
                 </div>
@@ -200,32 +161,24 @@ const TruongBoMonKeHoach = ()=>{
                     <table id="example" class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>Mã học phần</th>
-                                <th>Tên học phần</th>
-                                <th>Bộ môn</th>
-                                <th>Năm học</th>
-                                <th>Khóa học</th>
-                                <th>Số lượng sinh viên</th>
+                                <th>ID</th>
+                                <th>Số lượng sinh viên/ nhóm</th>
                                 <th>Tổng số nhóm</th>
+                                <th>Tổng sinh viên</th>
+                                <th>Học phần</th>
+                                <th>Bộ môn</th>
                                 <th>Chức năng</th>
                             </tr>
                         </thead>
                         <tbody>
                             {items.map((item=>{
                                 return  <tr>
-                                    <td>{item.hocPhan.maHP}</td>
-                                    <td>{item.hocPhan.tenHP}</td>
-                                    <td>{item.hocPhan.chuyenNganh?.tenChuyenNganh}</td>
-                                    <td>{item.namHoc.hocKy}, {item.namHoc.tenNamHoc}</td>
-                                    <td>{item.khoaHoc.tenKhoaHoc}<br/>
-                                    {item.keHoachMoMonNganhs.map((khmm, index)=>{
-                                        return <span>{khmm.nganh.tenNganh}
-                                       {index < item.keHoachMoMonNganhs.length - 1 && " + "}
-                                        </span>
-                                    })}
-                                    </td>
+                                    <td>{item.id}</td>
                                     <td>{item.soLuongSinhVienNhom}</td>
                                     <td>{item.tongSoNhom}</td>
+                                    <td>{item.tongSinhVien}</td>
+                                    <td>{item.hocPhan.maHP} - {item.hocPhan.tenHP}</td>
+                                    <td>{item.hocPhan.boMon?.tenBoMon}</td>
                                     <td class="sticky-col">
                                         <button onClick={()=>loadDanhSachGv(item)} data-bs-toggle="modal" data-bs-target="#addtk" class="edit-btn"><i className='fa fa-user-plus'></i></button>
                                     </td>

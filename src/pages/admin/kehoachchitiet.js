@@ -16,20 +16,47 @@ var size = 10
 var url = '';
 const AdminKeHoachChiTiet = ()=>{
     const [items, setItems] = useState([]);
+    const [namHoc, setnamHoc] = useState([]);
+    const [selectNamHoc, setSelectNamHoc] = useState(null);
     const [pageCount, setpageCount] = useState(0);
+    const [totalElement, setTotalElement] = useState(0);
 
     useEffect(()=>{
-        getKeHoachChiTiet();
+        const getSelect = async() =>{
+            var response = await getMethod('/api/nam-hoc/all/find-all-list')
+            var result = await response.json();
+            setnamHoc(result)
+            getKeHoachChiTiet(result[result.length-1].id)
+        };
+        getSelect();
     }, []);
 
-    const getKeHoachChiTiet = async() =>{
-        var uls = new URL(document.URL)
-        var kehoach = uls.searchParams.get("kehoach");
-        var response = await getMethod('/api/ke-hoach-chi-tiet/all/find-by-kehoach?&size='+size+'&idKeHoach='+kehoach+'&sort=tongSoNhom,asc&page='+0)
+    const getKeHoachChiTiet = async(idnamhoc, search) =>{
+        var urlfr = '/api/ke-hoach-chi-tiet/all/find-by-kehoach?&size='+size+'&idNamHoc='+idnamhoc+'&sort=tongSoNhom,asc'
+        if(search != null && search != undefined){
+            urlfr += '&search='+search
+        }
+        urlfr += '&page='
+        url = urlfr;
+        var response = await getMethod(urlfr+0)
         var result = await response.json();
+        setTotalElement(result.totalElements);
         setItems(result.content)
         setpageCount(result.totalPages)
-        url ='/api/ke-hoach-chi-tiet/all/find-by-kehoach?&size='+size+'&idKeHoach='+kehoach+'&sort=tongSoNhom,asc&page='
+    };
+
+    const locKeHoach = async() =>{
+        getKeHoachChiTiet(selectNamHoc.id)
+    };
+
+    const searchKeHoach = async() =>{
+        var search = document.getElementById("search").value
+        if(search != ""){
+            getKeHoachChiTiet(selectNamHoc.id, search)
+        }
+        else{
+            getKeHoachChiTiet(selectNamHoc.id)
+        }
     };
 
     const handlePageClick = async (data)=>{
@@ -48,7 +75,8 @@ const AdminKeHoachChiTiet = ()=>{
         const response = await postMethod(url)
         if (response.status < 300) {
             toast.success("Cập nhật thành công")
-            getKeHoachChiTiet();
+            event.target.elements.soluong.value = null;
+            getKeHoachChiTiet(selectNamHoc.id)
         } 
         else {
             if (response.status == 417) {
@@ -64,11 +92,22 @@ const AdminKeHoachChiTiet = ()=>{
     return (
         <>
             <div class="headerpageadmin d-flex justify-content-between align-items-center p-3 bg-light border">
-                <strong class="text-left"><i className='fa fa-users'></i> Quản Lý Kế Hoạch Chi Tiết</strong>
+                <strong class="text-left"><i className='fa fa-users'></i> Quản Lý Kế Hoạch Chi Tiết - tìm thấy {totalElement} học phần</strong>
                 <div class="search-wrapper d-flex align-items-center">
-                    <div className='d-flex divngayadmin'>   
+                    <div className='d-flex divngayadmin'>
+                        <input onKeyUp={searchKeHoach} id='search' placeholder='Nhập mã hoặc tên môn học' className='selectheader'/>  
+                        <Select
+                            className="select-container selectheader" 
+                            options={namHoc}
+                            value={selectNamHoc}
+                            onChange={setSelectNamHoc}
+                            getOptionLabel={(option) => option.tenNamHoc + " - "+option.hocKy} 
+                            getOptionValue={(option) => option.id}    
+                            id='namHoc'
+                            placeholder="Chọn năm học"
+                        /> 
+                        <button onClick={locKeHoach} className='btn btn-primary selectheader'>Lọc</button>
                     </div>
-                    {/* <a href='add-ke-hoach' class="btn btn-primary ms-2"><i className='fa fa-plus'></i></a> */}
                 </div>
             </div>
             <div class="tablediv">
@@ -84,6 +123,7 @@ const AdminKeHoachChiTiet = ()=>{
                                 <th>Tổng số nhóm</th>
                                 <th>Tổng sinh viên</th>
                                 <th>Học phần</th>
+                                <th>Bộ môn</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -100,6 +140,7 @@ const AdminKeHoachChiTiet = ()=>{
                                     <td>{item.tongSoNhom}</td>
                                     <td>{item.tongSinhVien}</td>
                                     <td>{item.hocPhan.maHP} - {item.hocPhan.tenHP}</td>
+                                    <td>{item.hocPhan.boMon?.tenBoMon}</td>
                                 </tr>
                             }))}
                         </tbody>

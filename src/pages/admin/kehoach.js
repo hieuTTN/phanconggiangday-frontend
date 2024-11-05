@@ -169,6 +169,7 @@ const AdminKeHoach = ()=>{
                         <button onClick={()=>reloadPage()} className='btn btn-primary selectheader'><i class="fa fa-refresh"></i></button>
                     </div>
                     <a href='add-ke-hoach' class="btn btn-primary ms-2"><i className='fa fa-plus'></i></a>
+                    <a href='chi-tiet-ke-hoach' class="btn btn-primary ms-2"><i className='fa fa-eye'></i></a>
                 </div>
             </div>
             <div class="tablediv">

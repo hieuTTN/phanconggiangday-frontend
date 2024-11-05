@@ -99,11 +99,11 @@ const AdminGiangVien = ()=>{
                         </thead>
                         <tbody>
                             {items.map((item=>{
-                                return  <tr>
-                                    <td>{item.maCB}</td>
+                                return  <tr className={item.user?.authorities.name == 'ROLE_HEAD_DEPARTMENT'?'tractive':''}>
+                                    <td><strong>{item.maCB}</strong><br/>{item.user?.email}</td>
                                     <td>{item.tenGV}</td>
                                     <td>{item.ngaySinh}</td>
-                                    <td>{item.chuyenNganh?.maChuyenNganh}</td>
+                                    <td>{item.boMon?.tenBoMon}</td>
                                     <td>{item.hocVi}</td>
                                     <td>{item.chucDanh}</td>
                                     <td>{item.donViCongTac}</td>
