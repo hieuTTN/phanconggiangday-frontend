@@ -178,6 +178,7 @@ const TruongBoMonKeHoach = ()=>{
                                 <th>Tổng sinh viên</th>
                                 <th>Học phần</th>
                                 <th>Bộ môn</th>
+                                <th>Trạng thái</th>
                                 <th>Chức năng</th>
                             </tr>
                         </thead>
@@ -202,6 +203,20 @@ const TruongBoMonKeHoach = ()=>{
                                         phanHoi = <button onClick={()=>loadDanhSachGv(item)} data-bs-toggle="modal" data-bs-target="#modelphanhoi" className='delete-btn top10'>Phản hồi</button>
                                     }
                                 }
+                                if(tongNhomLT == tongNhomTH){
+                                    tongNhomAll = Number(tongNhomAll) + Number(tongNhomLT);
+                                }
+                                if(tongNhomLT > tongNhomTH){
+                                    tongNhomAll = Number(tongNhomAll) + Number(tongNhomTH);
+                                }
+                                if(tongNhomTH > tongNhomLT){
+                                    tongNhomAll = Number(tongNhomAll) + Number(tongNhomLT);
+                                }
+                                var btn = <span className='errorpc'>Chưa phân công xong</span>
+                                if(tongNhomAll == item.tongSoNhom){
+                                    tongNhomAll = Number(tongNhomAll) - Number(tongNhomLT)
+                                    btn = <span className='successpc'>Đã công xong</span>
+                                }
                                 return  <tr>
                                     <td>{item.id}</td>
                                     <td>{item.soLuongSinhVienNhom}</td>
@@ -215,6 +230,7 @@ const TruongBoMonKeHoach = ()=>{
                                     <td>{item.tongSinhVien}</td>
                                     <td>{item.hocPhan.maHP} - {item.hocPhan.tenHP}</td>
                                     <td>{item.hocPhan.boMon?.tenBoMon}</td>
+                                    <td>{btn}</td>
                                     <td class="sticky-col">
                                         <button onClick={()=>loadDanhSachGv(item)} data-bs-toggle="modal" data-bs-target="#addtk" class="edit-btn"><i className='fa fa-user-plus'></i></button>
                                         {phanHoi}
