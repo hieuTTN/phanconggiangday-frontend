@@ -189,8 +189,8 @@ const AdminLopHoc = ()=>{
                                 <th>Mã lớp</th>
                                 <th>Tên lớp</th>
                                 <th>Số lượng sinh viên</th>
-                                <th>Khóa học</th>
                                 <th>Ngành</th>
+                                <th>Khóa học</th>
                                 <th>Chức năng</th>
                             </tr>
                         </thead>

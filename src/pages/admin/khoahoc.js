@@ -39,29 +39,26 @@ const AdminKhoaHoc = ()=>{
     }
 
     function clearData(){
-        document.getElementById("makh").value = "";
+        document.getElementById("idkh").value = "";
         document.getElementById("tenkh").value = "";
-        setType("save");
         setLabelBtn("Thêm khóa học");
     }
 
     function setData(khoahoc){
-        document.getElementById("makh").value = khoahoc.maKhoaHoc;
+        document.getElementById("idkh").value = khoahoc.id;
         document.getElementById("tenkh").value = khoahoc.tenKhoaHoc;
-        setType("update");
+        document.getElementById("ketthuc").checked = khoahoc.trangThaiKhoaHoc == "DA_KET_THUC";
         setLabelBtn("Cập nhật khóa học");
     }
 
     async function handleAddKhoaHoc(event) {
         event.preventDefault();
         const payload = {
-            maKhoaHoc: event.target.elements.makh.value,
+            id: event.target.elements.idkh.value,
             tenKhoaHoc: event.target.elements.tenkh.value,
+            trangThaiKhoaHoc: event.target.elements.ketthuc.checked == true?'DA_KET_THUC':'DANG_HOC',
         };
         var urls = '/api/khoa-hoc/admin/add'
-        if(type == "update"){
-            urls = '/api/khoa-hoc/admin/update'
-        }
         const res = await postMethodPayload(urls,payload)
         var result = await res.json()
         console.log(result);
@@ -113,19 +110,21 @@ const AdminKhoaHoc = ()=>{
                     <table id="example" class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>Mã khóa học</th>
+                                <th>Id</th>
                                 <th>Tên khóa học</th>
+                                <th>Trạng thái</th>
                                 <th>Chức năng</th>
                             </tr>
                         </thead>
                         <tbody>
                             {items.map((item=>{
                                 return  <tr>
-                                    <td>{item.maKhoaHoc}</td>
+                                    <td>{item.id}</td>
                                     <td>{item.tenKhoaHoc}</td>
+                                    <td>{item.trangThaiKhoaHoc}</td>
                                     <td class="sticky-col">
                                         <a data-bs-toggle="modal" data-bs-target="#addtk" onClick={()=>setData(item)} href='#' class="edit-btn"><i className='fa fa-edit'></i></a>
-                                        <button onClick={()=>deleteKhoaHoc(item.maKhoaHoc)} class="delete-btn"><i className='fa fa-trash'></i></button>
+                                        <button onClick={()=>deleteKhoaHoc(item.id)} class="delete-btn"><i className='fa fa-trash'></i></button>
                                     </td>
                                 </tr>
                             }))}
@@ -158,10 +157,14 @@ const AdminKhoaHoc = ()=>{
                             <h5 class="modal-title" id="exampleModalLabel">{labelBtn}</h5> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
                         <div class="modal-body row">
                             <form onSubmit={handleAddKhoaHoc} class="col-sm-6" style={{margin:'auto'}}>
-                                <label class="lb-form">Mã khóa học</label>
-                                <input name='makh' id='makh' class="form-control"/>
+                                <input name='idkh' id='idkh' type='hidden' class="form-control"/>
                                 <label class="lb-form">Tên khóa học</label>
                                 <input name='tenkh' id='tenkh' class="form-control"/>
+                                <br/>
+                                <label class="checkbox-custom">Kết thúc
+                                    <input name='ketthuc' type="checkbox" id='ketthuc'/>
+                                    <span class="checkmark-checkbox"></span>
+                                </label>
                                 <br/>
                                 <button class="form-control btn btn-primary">{labelBtn}</button>
                             </form>

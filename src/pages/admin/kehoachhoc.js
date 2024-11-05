@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import $ from 'jquery'; 
 import Swal from 'sweetalert2'
 import Select from 'react-select';
-import {getMethod,postMethodPayload, deleteMethod} from '../../services/request';
+import {getMethod,postMethodPayload, deleteMethod, postMethod} from '../../services/request';
 
 
 var token = localStorage.getItem("token");
@@ -16,6 +16,7 @@ var size = 10
 var url = '';
 const AdminKeHoachHoc = ()=>{
     const [items, setItems] = useState([]);
+    const [itemList, setItemList] = useState([]);
     const [nganh, setNganh] = useState([]);
     const [selectedNganh, setSelectedNganh] = useState(null);
     const [khoaHoc, setKhoaHoc] = useState([]);
@@ -24,16 +25,23 @@ const AdminKeHoachHoc = ()=>{
     const [pageCount, setpageCount] = useState(0);
     const [selectedKhoaHocSearch, setSelectedKhoaHocSearch] = useState(null);
     const [selectedNganhSearch, setSelectedNganhSearch] = useState(null);
+    const [selectedItem, setSelectedItem] = useState(null);
 
     useEffect(()=>{
         const getKeHoachHoc = async() =>{
-            var response = await getMethod('/api/ke-hoach-hoc/all/findAll-page?size='+size+'&page='+0)
+            var response = await getMethod('/api/ke-hoach-hoc/all/findAll-page?size='+size+'&sort=khoaHoc.id,desc'+'&page='+0)
             var result = await response.json();
             setItems(result.content)
             setpageCount(result.totalPages)
             url = '/api/ke-hoach-hoc/all/findAll-page?size='+size+'&page=';
         };
         getKeHoachHoc();
+        const getKeHoachHocList = async() =>{
+            var response = await getMethod('/api/ke-hoach-hoc/all/findAll-list')
+            var result = await response.json();
+            setItemList(result)
+        };
+        getKeHoachHocList();
         const getNganh = async() =>{
             var response = await getMethod('/api/nganh/all/find-all')
             var result = await response.json();
@@ -80,11 +88,7 @@ const AdminKeHoachHoc = ()=>{
         }
         if(res.status < 300){
             toast.success("Thành công!");
-            var response = await getMethod('/api/ke-hoach-hoc/all/findAll-page?size='+size+'&page='+0)
-            var result = await response.json();
-            setItems(result.content)
-            setpageCount(result.totalPages)
-            url = '/api/ke-hoach-hoc/all/findAll-page?size='+size+'&page=';
+            reloadPage();
         }
     };
     
@@ -138,6 +142,28 @@ const AdminKeHoachHoc = ()=>{
         setpageCount(result.totalPages)
     }
 
+    async function handleCloneKeHoachHoc(event) {
+        event.preventDefault();
+        var fromId = event.target.elements.fromId.value
+        var toId = selectedItem.id
+        if(fromId == toId){
+            toast.error("Kế hoạch học không thể tự clone");
+            return;
+        }
+        var con = window.confirm("Xác nhận clone kế hoạch học "+fromId +" sang kế hoạch học: "+toId)
+        if(con == false){
+            return;
+        }
+        const res = await postMethod('/api/ke-hoach-hoc/admin/clone?fromId='+fromId+'&toId='+toId)
+        if (res.status == 417) {
+            var result = await res.json()
+            toast.error(result.defaultMessage);
+        }
+        if(res.status < 300){
+            toast.success("Thành công!");
+            reloadPage();
+        }
+    };
 
     return (
         <>
@@ -182,6 +208,8 @@ const AdminKeHoachHoc = ()=>{
                                 <th>Id</th>
                                 <th>Ngành</th>
                                 <th>Khóa học</th>
+                                <th>Số lượng chi tiết</th>
+                                <th>Số lượng học kỳ</th>
                                 <th>Chức năng</th>
                             </tr>
                         </thead>
@@ -191,10 +219,15 @@ const AdminKeHoachHoc = ()=>{
                                     <td>{item.id}</td>
                                     <td>{item.nganh.tenNganh}</td>
                                     <td>{item.khoaHoc.tenKhoaHoc}</td>
+                                    <td>{item.soLuongChiTietHoc}</td>
+                                    <td>{item.soLuongKyHoc}</td>
                                     <td class="sticky-col">
                                         <a data-bs-toggle="modal" data-bs-target="#addtk" onClick={()=>setData(item)} href='#' class="edit-btn"><i className='fa fa-edit'></i></a>
                                         <button onClick={()=>deleteKeHoachHoc(item.id)} class="delete-btn"><i className='fa fa-trash'></i></button>
                                         <a href={'chi-tiet-hoc?kehoachhoc='+item.id} class="edit-btn"><i className='fa fa-book'></i></a>
+                                        {item.soLuongChiTietHoc > 0?'':
+                                        <a data-bs-toggle="modal" data-bs-target="#cloneKhh" onClick={()=>setSelectedItem(item)} href='#' class="edit-btn"><i className='fa fa-clone'></i></a>
+                                        }
                                     </td>
                                 </tr>
                             }))}
@@ -253,6 +286,31 @@ const AdminKeHoachHoc = ()=>{
                                 />
                                 <br/>
                                 <button class="form-control btn btn-primary">{labelBtn}</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="cloneKhh" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Clone kế hoạch học cho ngành {selectedItem?.nganh.tenNganh}, {selectedItem?.khoaHoc.tenKhoaHoc}</h5> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+                        <div class="modal-body row">
+                            <form onSubmit={handleCloneKeHoachHoc} class="col-sm-6" style={{margin:'auto'}}>
+                                <input name='idkhh' id='idkhh' type='hidden' class="form-control"/>
+                                <label class="lb-form">Chọn kế hoạch học muốn clone</label>
+                                <Select
+                                    className="select-container" 
+                                    options={itemList}
+                                    getOptionLabel={(option) => option.nganh.tenNganh+' - '+option.khoaHoc.tenKhoaHoc} 
+                                    getOptionValue={(option) => option.id}    
+                                    closeMenuOnSelect={false}
+                                    name='fromId'
+                                    placeholder="Chọn id kế hoạch muốn clone"
+                                />
+                                <br/><br/><br/>
+                                <button class="form-control btn btn-primary">Clone kế hoạch học</button>
                             </form>
                         </div>
                     </div>

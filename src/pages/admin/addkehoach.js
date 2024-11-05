@@ -16,7 +16,7 @@ const AdminAddKeHoach = ()=>{
 
     useEffect(()=>{
         const getSelect = async() =>{
-            var response = await getMethod('/api/khoa-hoc/all/find-all-list')
+            var response = await getMethod('/api/khoa-hoc/all/khoa-hoc-chua-ket-thuc')
             var result = await response.json();
             setKhoaHoc(result)
             var response = await getMethod('/api/nam-hoc/all/find-all-list')

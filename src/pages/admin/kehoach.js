@@ -19,22 +19,20 @@ const AdminKeHoach = ()=>{
     const [pageCount, setpageCount] = useState(0);
     const [khoahoc, setKhoaHoc] = useState([]);
     const [namHoc, setnamHoc] = useState([]);
-    const [hocPhan, sethocPhan] = useState([]);
+    const [hocKy, setHocKy] = useState([]);
+    const [nganh, setNganh] = useState([]);
     const [selectKhoaHoc, setSelectKhoaHoc] = useState(null);
     const [selectNamHoc, setSelectNamHoc] = useState(null);
-    const [selectHocPhan, setSelectHocPhan] = useState(null);
-    const [giangVien, setGiangVien] = useState([]);
-    const [selectGiangVien, setSelectGiangVien] = useState(null);
-    const [kehoach, setKeHoach] = useState(null);
-    const [listKeHoach, setListKeHoach] = useState([]);
+    const [selectHocKy, setSelectHocKy] = useState(null);
+    const [selectedNganh, setSelectedNganh] = useState(null);
 
     useEffect(()=>{
         const getKeHoach = async() =>{
-            // var response = await getMethod('/api/ke-hoach-mo-mon/all/find-all?&size='+size+'&sort=id,desc&page='+0)
-            // var result = await response.json();
-            // setItems(result.content)
-            // setpageCount(result.totalPages)
-            // url = '/api/ke-hoach-mo-mon/all/find-all?&size='+size+'&sort=id,desc&page='
+            var response = await getMethod('/api/ke-hoach-mo-mon/all/find-all?&size='+size+'&sort=id,desc&page='+0)
+            var result = await response.json();
+            setItems(result.content)
+            setpageCount(result.totalPages)
+            url = '/api/ke-hoach-mo-mon/all/find-all?&size='+size+'&sort=id,desc&page='
         };
         getKeHoach();
         const getSelect = async() =>{
@@ -44,17 +42,14 @@ const AdminKeHoach = ()=>{
             var response = await getMethod('/api/nam-hoc/all/find-all-list')
             var result = await response.json();
             setnamHoc(result)
-            var response = await getMethod('/api/hoc-phan/all/find-all-list')
+            var response = await getMethod('/api/hocky/all/find-all')
             var result = await response.json();
-            sethocPhan(result)
+            setHocKy(result)
+            var response = await getMethod('/api/nganh/all/find-all')
+            var result = await response.json();
+            setNganh(result)
         };
         getSelect();
-        const getGiangVien = async() =>{
-            var response = await getMethod('/api/giang-vien/all/find-all-list')
-            var result = await response.json();
-            setGiangVien(result)
-        };
-        getGiangVien();
     }, []);
 
     const handlePageClick = async (data)=>{
@@ -66,19 +61,23 @@ const AdminKeHoach = ()=>{
     }
 
     const locKeHoach = async() =>{
-        var maKhoaHoc = selectKhoaHoc == null?null:selectKhoaHoc.maKhoaHoc
-        var maHP = selectHocPhan == null?null:selectHocPhan.maHP
-        var idNamHoc = selectNamHoc == null?null:selectNamHoc.id
+        var idkhoahoc = selectKhoaHoc?.id
+        var idhocky = selectHocKy?.id
+        var idNamHoc = selectNamHoc?.id
+        var idnganh = selectedNganh?.id
 
         var uls = '/api/ke-hoach-mo-mon/all/find-all?&size='+size+'&sort=id,desc'
-        if(maKhoaHoc != null){
-            uls += '&maKhoaHoc='+maKhoaHoc
+        if(idkhoahoc != null){
+            uls += '&idKhoaHoc='+idkhoahoc
         }
-        if(maHP != null){
-            uls += '&maHP='+maHP
+        if(idhocky != null){
+            uls += '&idHocKy='+idhocky
         }
         if(idNamHoc != null){
             uls += '&idNamHoc='+idNamHoc
+        }
+        if(idnganh != null){
+            uls += '&idNganh='+idnganh
         }
         uls += '&page='
         url = uls
@@ -114,58 +113,10 @@ const AdminKeHoach = ()=>{
         setItems(result.content)
         setpageCount(result.totalPages)
         url = '/api/ke-hoach-mo-mon/all/find-all?&size='+size+'&sort=id,desc&page='
-    }
-
-    async function loadDanhSachGv(item) {
-        setKeHoach(item)
-        var response = await getMethod('/api/phan-cong-giang-vien/admin/find-by-ke-hoach?keHoachId='+item.id)
-        var result = await response.json();
-        setListKeHoach(result)
-    }
-    
-
-    async function handleAddPhanCong(event) {
-        event.preventDefault();
-        const payload = {
-            soNhom: event.target.elements.soNhom.value,
-            keHoachMoMon: {
-                id: kehoach.id,
-            },
-            giangVien: {
-                maCB: selectGiangVien.maCB,
-            },
-        };
-        
-        const res = await postMethodPayload('/api/phan-cong-giang-vien/admin/add',payload)
-        var result = await res.json()
-        console.log(result);
-        if (res.status == 417) {
-            toast.error(result.defaultMessage);
-        }
-        if(res.status < 300){
-            toast.success("Thành công!");
-            var response = await getMethod('/api/phan-cong-giang-vien/admin/find-by-ke-hoach?keHoachId='+kehoach.id)
-            var result = await response.json();
-            setListKeHoach(result)
-        }
-    };
-
-    async function deletePhanCong(id){
-        var con = window.confirm("Bạn chắc chắn muốn xóa phân công này?");
-        if (con == false) {
-            return;
-        }
-        var response = await deleteMethod('/api/phan-cong-giang-vien/admin/delete?id='+id)
-        if (response.status < 300) {
-            toast.success("xóa thành công!");
-            var response = await getMethod('/api/phan-cong-giang-vien/admin/find-by-ke-hoach?keHoachId='+kehoach.id)
-            var result = await response.json();
-            setListKeHoach(result)
-        }
-        if (response.status == 417) {
-            var result = await response.json()
-            toast.warning(result.defaultMessage);
-        }
+        setSelectHocKy(null)
+        setSelectKhoaHoc(null)
+        setSelectNamHoc(null)
+        setSelectedNganh(null)
     }
 
     return (
@@ -177,32 +128,42 @@ const AdminKeHoach = ()=>{
                         <Select
                             className="select-container" 
                             options={khoahoc}
+                            value={selectKhoaHoc}
                             onChange={setSelectKhoaHoc}
                             getOptionLabel={(option) => option.tenKhoaHoc} 
                             getOptionValue={(option) => option.maKhoaHoc}    
-                            closeMenuOnSelect={false}
                             id='khoaHoc'
                             placeholder="Chọn khóa học"
                         />
                         <Select
                             className="select-container selectheader" 
                             options={namHoc}
+                            value={selectNamHoc}
                             onChange={setSelectNamHoc}
                             getOptionLabel={(option) => option.tenNamHoc + " - "+option.hocKy} 
                             getOptionValue={(option) => option.id}    
-                            closeMenuOnSelect={false}
                             id='namHoc'
                             placeholder="Chọn năm học"
                         />
                         <Select
                             className="select-container selectheader" 
-                            options={hocPhan}
-                            onChange={setSelectHocPhan}
-                            getOptionLabel={(option) => option.tenHP} 
-                            getOptionValue={(option) => option.maHP}    
-                            closeMenuOnSelect={false}
-                            id='hocPhan'
-                            placeholder="Chọn học phần"
+                            options={hocKy}
+                            value={selectHocKy}
+                            onChange={setSelectHocKy}
+                            getOptionLabel={(option) => option.tenHocKy} 
+                            getOptionValue={(option) => option.id}    
+                            id='hocKy'
+                            placeholder="Chọn học kỳ"
+                        />
+                        <Select
+                            className="select-container selectheader" 
+                            options={nganh}
+                            value={selectedNganh}
+                            onChange={setSelectedNganh}
+                            getOptionLabel={(option) => option.tenNganh} 
+                            getOptionValue={(option) => option.id}    
+                            id='nganh'
+                            placeholder="Chọn ngành"
                         />
                         <button onClick={locKeHoach} className='btn btn-primary selectheader'>Lọc</button>
                         <button onClick={()=>reloadPage()} className='btn btn-primary selectheader'><i class="fa fa-refresh"></i></button>
@@ -218,38 +179,27 @@ const AdminKeHoach = ()=>{
                     <table id="example" class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>Mã học phần</th>
-                                <th>Tên học phần</th>
-                                <th>Bộ môn</th>
+                                <th>ID</th>
+                                <th>Ngày tạo</th>
                                 <th>Năm học</th>
                                 <th>Khóa học</th>
-                                <th>Tổng số sinh viên</th>
-                                <th>Số lượng sinh viên/nhóm</th>
-                                <th>Tổng số nhóm</th>
+                                <th>Học kỳ</th>
+                                <th>Ngành</th>
                                 <th>Chức năng</th>
                             </tr>
                         </thead>
                         <tbody>
                             {items.map((item=>{
                                 return  <tr>
-                                    <td>{item.hocPhan.maHP}</td>
-                                    <td><a target='_blank' className='pointer' href={'add-hoc-phan?mahp='+item.hocPhan.maHP}>{item.hocPhan.tenHP}</a></td>
-                                    <td>{item.hocPhan.chuyenNganh?.tenChuyenNganh}</td>
+                                    <td>{item.id}</td>
+                                    <td>{item.ngayTao}</td>
                                     <td>{item.namHoc.hocKy}, {item.namHoc.tenNamHoc}</td>
-                                    <td>{item.khoaHoc.tenKhoaHoc}<br/>
-                                    {item.keHoachMoMonNganhs.map((khmm, index)=>{
-                                        return <span>{khmm.nganh.tenNganh}
-                                       {index < item.keHoachMoMonNganhs.length - 1 && " + "}
-                                        </span>
-                                    })}
-                                    </td>
-                                    <td>{item.tongSoSinhVien}</td>
-                                    <td>{item.soLuongSinhVienNhom}</td>
-                                    <td>{item.tongSoNhom}</td>
+                                    <td>{item.khoaHoc.tenKhoaHoc}</td>
+                                    <td>{item.hocKy.tenHocKy}</td>
+                                    <td>{item.nganh.tenNganh}</td>
                                     <td class="sticky-col">
-                                        <a href={'add-ke-hoach?id='+item.id} class="edit-btn"><i className='fa fa-edit'></i></a>
+                                        <a href={'chi-tiet-ke-hoach?kehoach='+item.id} target='_blank' class="edit-btn"><i className='fa fa-eye'></i></a>
                                         <button onClick={()=>deletekeHoach(item.id)} class="delete-btn"><i className='fa fa-trash'></i></button>
-                                        <button onClick={()=>loadDanhSachGv(item)} data-bs-toggle="modal" data-bs-target="#addtk" class="edit-btn"><i className='fa fa-user-plus'></i></button>
                                     </td>
                                 </tr>
                             }))}
@@ -275,71 +225,6 @@ const AdminKeHoach = ()=>{
                 </div>
             </div>
 
-            <div class="modal fade" id="addtk" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Thêm giảng viên</h5> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
-                        <div class="modal-body row">
-                            <form onSubmit={handleAddPhanCong} className='row'>
-                                <div className='col-sm-4'>
-                                    <label class="lb-form">Số nhóm dạy</label>
-                                    <input name='soNhom' id='soNhom' class="form-control"/>
-                                </div>
-                                <div className='col-sm-4'>
-                                    <label class="lb-form">Giảng viên</label>
-                                    <Select
-                                        className="select-container" 
-                                        options={giangVien}
-                                        onChange={setSelectGiangVien}
-                                        getOptionLabel={(option) => option.maCB + " - "+option.tenGV} 
-                                        getOptionValue={(option) => option.maCB}    
-                                        closeMenuOnSelect={false}
-                                        id='giangvien'
-                                        placeholder="Chọn giảng viên"
-                                    />
-                                </div>
-                                <div className='col-sm-4'>
-                                    <label class="lb-form" dangerouslySetInnerHTML={{__html:'&ThinSpace;'}}></label>
-                                    <button className='btn btn-primary'>Thêm</button>
-                                </div>
-                            </form>
-
-                            <div class="tablediv">
-                                <div class="headertable">
-                                    <span class="lbtable">Danh sách phân công </span>
-                                </div>
-                                <div class="divcontenttable">
-                                    <table id="example" class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>Mã giảng viên</th>
-                                                <th>Tên giảng viên</th>
-                                                <th>Số nhóm dạy</th>
-                                                <th>Ngày thêm</th>
-                                                <th>Chức năng</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {listKeHoach.map((item=>{
-                                                return  <tr>
-                                                    <td>{item.giangVien.maCB}</td>
-                                                    <td>{item.giangVien.tenGV}</td>
-                                                    <td>{item.soNhom}</td>
-                                                    <td>{item.ngayCapNhat}</td>
-                                                    <td class="sticky-col">
-                                                        <button onClick={()=>deletePhanCong(item.id)} class="delete-btn"><i className='fa fa-trash'></i></button>
-                                                    </td>
-                                                </tr>
-                                            }))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </>
     );
 }
