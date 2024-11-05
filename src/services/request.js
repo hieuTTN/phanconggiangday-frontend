@@ -76,6 +76,21 @@ async function postMethodPayload(url, payload) {
     return response
 }
 
+async function postMethodText(url, payload) {
+    if(url.includes(firstUrl) == false){
+        url = firstUrl + url;
+    }
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: new Headers({
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'text/plain'
+        }),
+        body: payload
+    });
+    return response
+}
+
 async function deleteMethod(url) {
     if(url.includes(firstUrl) == false){
         url = firstUrl + url;
@@ -91,4 +106,4 @@ async function deleteMethod(url) {
 
 
 
-export {getMethod,postMethod, uploadSingleFile,uploadMultipleFile,postMethodPayload,deleteMethod}
+export {getMethod,postMethod, uploadSingleFile,uploadMultipleFile,postMethodPayload,deleteMethod,postMethodText}

@@ -4,7 +4,7 @@ import {toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import $ from 'jquery'; 
 import Swal from 'sweetalert2'
-import {getMethod,postMethodPayload, deleteMethod} from '../../services/request';
+import {getMethod,postMethodPayload, postMethodText} from '../../services/request';
 import Select from 'react-select';
 
 
@@ -17,9 +17,9 @@ var url = '';
 const TeacherPhanCong = ()=>{
     const [items, setItems] = useState([]);
     const [pageCount, setpageCount] = useState(0);
-    const [khoahoc, setKhoaHoc] = useState([]);
     const [namHoc, setnamHoc] = useState([]);
     const [selectNamHoc, setSelectNamHoc] = useState([]);
+    const [selectPhanCong, setSelectPhanCong] = useState(null);
     useEffect(()=>{
         const getPhanCong = async() =>{
             var response = await getMethod('/api/phan-cong-giang-vien/teacher/phan-cong-cua-toi?&size='+size+'&sort=id,desc&page='+0)
@@ -61,6 +61,19 @@ const TeacherPhanCong = ()=>{
         url = '/api/phan-cong-giang-vien/teacher/phan-cong-cua-toi?&size='+size+'&sort=id,desc&page='
     }
 
+    async function hanlePhanHoi(event) {
+        event.preventDefault();
+        var phanHoi = event.target.elements.noiDung.value
+        const res = await postMethodText('/api/phan-cong-giang-vien/teacher/phan-hoi?id='+selectPhanCong.id, phanHoi);
+        if (res.status == 417) {
+            var result = await res.json()
+            toast.warning(result.defaultMessage);
+        }
+        if(res.status < 300){
+            toast.success("Đã gửi phản hồi")
+        }
+    };
+
     return (
         <>
             <div class="headerpageadmin d-flex justify-content-between align-items-center p-3 bg-light border">
@@ -94,7 +107,6 @@ const TeacherPhanCong = ()=>{
                                 <th>Mã học phần</th>
                                 <th>Tên học phần</th>
                                 <th>Năm học</th>
-                                <th>Khóa học</th>
                                 <th>Số nhóm phụ trách</th>
                                 <th>Gửi báo cáo</th>
                             </tr>
@@ -103,13 +115,12 @@ const TeacherPhanCong = ()=>{
                             {items.map((item=>{
                                 return  <tr>
                                     <td>{item.ngayCapNhat}</td>
-                                    <td>{item.keHoachMoMon.hocPhan.maHP}</td>
-                                    <td>{item.keHoachMoMon.hocPhan.tenHP}</td>
-                                    <td>{item.keHoachMoMon.namHoc.hocKy}, {item.keHoachMoMon.namHoc.tenNamHoc}</td>
-                                    <td>{item.keHoachMoMon.khoaHoc.tenKhoaHoc}</td>
-                                    <td>{item.soNhom}</td>
+                                    <td>{item.keHoachChiTiet.hocPhan.maHP}</td>
+                                    <td>{item.keHoachChiTiet.hocPhan.tenHP}</td>
+                                    <td>{item.keHoachChiTiet.namHoc.hocKy}, {item.keHoachChiTiet.namHoc.tenNamHoc}</td>
+                                    <td>{item.soNhom} {item.loaiNhom != "ALL"?" - "+item.loaiNhom:'TH + LT'}</td>
                                     <td class="sticky-col">
-                                        <a data-bs-toggle="modal" data-bs-target="#addtk" class="edit-btn"><i className='fa fa-edit'></i></a>
+                                        <a onClick={()=>setSelectPhanCong(item)} data-bs-toggle="modal" data-bs-target="#addtk" class="edit-btn"><i className='fa fa-edit'></i></a>
                                     </td>
                                 </tr>
                             }))}
@@ -140,7 +151,7 @@ const TeacherPhanCong = ()=>{
                         <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Gửi báo cáo phân công</h5> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
                         <div class="modal-body row">
-                            <form className='row'>
+                            <form onSubmit={hanlePhanHoi} className='row'>
                                 <div className='col-sm-12'>
                                     <label class="lb-form">Nội dung báo cáo</label>
                                     <textarea name='noiDung' rows={4} class="form-control"></textarea>

@@ -186,6 +186,7 @@ const TruongBoMonKeHoach = ()=>{
                                 var tongNhomAll = 0; 
                                 var tongNhomLT = 0; 
                                 var tongNhomTH = 0; 
+                                var phanHoi = <></>
                                 for(var i=0; i< item.phanCongGiangViens.length; i++){
                                     var phanCong = item.phanCongGiangViens[i];
                                     if(phanCong.loaiNhom == "ALL"){
@@ -196,6 +197,9 @@ const TruongBoMonKeHoach = ()=>{
                                     }
                                     if(phanCong.loaiNhom == "TH"){
                                         tongNhomTH = Number(tongNhomTH) + Number(phanCong.soNhom)
+                                    }
+                                    if(phanCong.phanHoi != null){
+                                        phanHoi = <button onClick={()=>loadDanhSachGv(item)} data-bs-toggle="modal" data-bs-target="#modelphanhoi" className='delete-btn top10'>Phản hồi</button>
                                     }
                                 }
                                 return  <tr>
@@ -213,6 +217,7 @@ const TruongBoMonKeHoach = ()=>{
                                     <td>{item.hocPhan.boMon?.tenBoMon}</td>
                                     <td class="sticky-col">
                                         <button onClick={()=>loadDanhSachGv(item)} data-bs-toggle="modal" data-bs-target="#addtk" class="edit-btn"><i className='fa fa-user-plus'></i></button>
+                                        {phanHoi}
                                     </td>
                                 </tr>
                             }))}
@@ -306,6 +311,46 @@ const TruongBoMonKeHoach = ()=>{
                                                     <td class="sticky-col">
                                                         <button onClick={()=>deletePhanCong(item.id)} class="delete-btn"><i className='fa fa-trash'></i></button>
                                                     </td>
+                                                </tr>
+                                            }))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="modelphanhoi" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Phản hồi phân công học phần {kehoach?.hocPhan.tenHP}</h5> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+                        <div class="modal-body row">
+                            <div class="tablediv">
+                                <div class="headertable">
+                                    <span class="lbtable">Danh sách phản hồi </span>
+                                </div>
+                                <div class="divcontenttable">
+                                    <table id="example" class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Mã giảng viên</th>
+                                                <th>Tên giảng viên</th>
+                                                <th>Số nhóm dạy</th>
+                                                <th>Ngày phản hồi</th>
+                                                <th>Phản hồi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {listKeHoach.map((item=>{
+                                                return  <tr>
+                                                    <td>{item.giangVien.maCB}</td>
+                                                    <td>{item.giangVien.tenGV}</td>
+                                                    <td>{item.soNhom} {item.loaiNhom != "ALL"?" - "+item.loaiNhom:''} </td>
+                                                    <td>{item.ngayPhanHoi}</td>
+                                                    <td>{item.phanHoi}</td>
                                                 </tr>
                                             }))}
                                         </tbody>
