@@ -18,13 +18,13 @@ const TruongBoMonKeHoach = ()=>{
     const [items, setItems] = useState([]);
     const [pageCount, setpageCount] = useState(0);
     const [namHoc, setnamHoc] = useState([]);
-    const [selectKhoaHoc, setSelectKhoaHoc] = useState(null);
     const [selectNamHoc, setSelectNamHoc] = useState(null);
-    const [selectHocPhan, setSelectHocPhan] = useState(null);
     const [giangVien, setGiangVien] = useState([]);
     const [selectGiangVien, setSelectGiangVien] = useState(null);
     const [kehoach, setKeHoach] = useState(null);
     const [listKeHoach, setListKeHoach] = useState([]);
+    const [giangVienHocPhan, setGiangVienHocPhan] = useState([]);
+    const [soNhomDay, setSoNhomDay] = useState(0);
     const [totalElement, setTotalElement] = useState(0);
 
     useEffect(()=>{
@@ -36,7 +36,7 @@ const TruongBoMonKeHoach = ()=>{
         };
         getSelect();
         const getGiangVien = async() =>{
-            var response = await getMethod('/api/giang-vien/all/find-all-list')
+            var response = await getMethod('/api/giang-vien/head-department/find-all-list-bo-mon')
             var result = await response.json();
             setGiangVien(result)
         };
@@ -91,11 +91,12 @@ const TruongBoMonKeHoach = ()=>{
         event.preventDefault();
         const payload = {
             soNhom: event.target.elements.soNhom.value,
-            keHoachMoMon: {
+            loaiNhom: event.target.elements.loaiNhom.value,
+            keHoachChiTiet: {
                 id: kehoach.id,
             },
             giangVien: {
-                maCB: selectGiangVien.maCB,
+                id: selectGiangVien.id,
             },
         };
         
@@ -131,6 +132,14 @@ const TruongBoMonKeHoach = ()=>{
         }
     }
 
+    async function loadThongTinGv(item) {
+        setSelectGiangVien(item);
+        var response = await getMethod('/api/giang-vien/head-department/thon-tin-gv?namHocId='+selectNamHoc.id+"&idGv="+item.id)
+        var result = await response.json();
+        setGiangVienHocPhan(result.giangVienHocPhans)
+        setSoNhomDay(result.soNhomDay)
+    }
+
     return (
         <>
             <div class="headerpageadmin d-flex justify-content-between align-items-center p-3 bg-light border">
@@ -162,8 +171,10 @@ const TruongBoMonKeHoach = ()=>{
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Số lượng sinh viên/ nhóm</th>
+                                <th>SV/ nhóm</th>
                                 <th>Tổng số nhóm</th>
+                                <th>Nhóm hiện tại</th>
+                                <th>Phân công</th>
                                 <th>Tổng sinh viên</th>
                                 <th>Học phần</th>
                                 <th>Bộ môn</th>
@@ -172,10 +183,31 @@ const TruongBoMonKeHoach = ()=>{
                         </thead>
                         <tbody>
                             {items.map((item=>{
+                                var tongNhomAll = 0; 
+                                var tongNhomLT = 0; 
+                                var tongNhomTH = 0; 
+                                for(var i=0; i< item.phanCongGiangViens.length; i++){
+                                    var phanCong = item.phanCongGiangViens[i];
+                                    if(phanCong.loaiNhom == "ALL"){
+                                        tongNhomAll = Number(tongNhomAll) + Number(phanCong.soNhom)
+                                    }
+                                    if(phanCong.loaiNhom == "LT"){
+                                        tongNhomLT = Number(tongNhomLT) + Number(phanCong.soNhom)
+                                    }
+                                    if(phanCong.loaiNhom == "TH"){
+                                        tongNhomTH = Number(tongNhomTH) + Number(phanCong.soNhom)
+                                    }
+                                }
                                 return  <tr>
                                     <td>{item.id}</td>
                                     <td>{item.soLuongSinhVienNhom}</td>
                                     <td>{item.tongSoNhom}</td>
+                                    <td>{tongNhomAll} - LT+TH<br/>{tongNhomLT} -LT<br/>{tongNhomTH} -TH</td>
+                                    <td>
+                                    {item.phanCongGiangViens.map((phanCong=>{
+                                        return <span>{phanCong.giangVien.maCB} - {phanCong.giangVien.tenGV}, {phanCong.soNhom} {phanCong.loaiNhom != "ALL"?" - "+phanCong.loaiNhom:''}<br/></span>
+                                    }))}
+                                    </td>
                                     <td>{item.tongSinhVien}</td>
                                     <td>{item.hocPhan.maHP} - {item.hocPhan.tenHP}</td>
                                     <td>{item.hocPhan.boMon?.tenBoMon}</td>
@@ -210,32 +242,45 @@ const TruongBoMonKeHoach = ()=>{
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Thêm giảng viên</h5> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+                        <h5 class="modal-title" id="exampleModalLabel">Kế hoạch học phần {kehoach?.hocPhan.tenHP}, {kehoach?.tongSoNhom} nhóm</h5> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
                         <div class="modal-body row">
                             <form onSubmit={handleAddPhanCong} className='row'>
-                                <div className='col-sm-4'>
+                                <div className='col-sm-3'>
                                     <label class="lb-form">Số nhóm dạy</label>
                                     <input name='soNhom' id='soNhom' class="form-control"/>
                                 </div>
-                                <div className='col-sm-4'>
+                                <div className='col-sm-3'>
+                                    <label class="lb-form">Loại nhóm</label>
+                                    <select name='loaiNhom' className='form-control'>
+                                        <option value='ALL'>LT + TH</option>
+                                        <option value='LT'>LT</option>
+                                        <option value='TH'>TH</option>
+                                    </select>
+                                </div>
+                                <div className='col-sm-3'>
                                     <label class="lb-form">Giảng viên</label>
                                     <Select
                                         className="select-container" 
                                         options={giangVien}
-                                        onChange={setSelectGiangVien}
-                                        getOptionLabel={(option) => option.maCB + " - "+option.tenGV} 
-                                        getOptionValue={(option) => option.maCB}    
+                                        onChange={loadThongTinGv}
+                                        getOptionLabel={(option) => option.id + " - "+option.tenGV} 
+                                        getOptionValue={(option) => option.id}    
                                         closeMenuOnSelect={false}
                                         id='giangvien'
                                         placeholder="Chọn giảng viên"
                                     />
                                 </div>
-                                <div className='col-sm-4'>
+                                <div className='col-sm-3'>
                                     <label class="lb-form" dangerouslySetInnerHTML={{__html:'&ThinSpace;'}}></label>
                                     <button className='btn btn-primary'>Thêm</button>
                                 </div>
                             </form>
-
+                            <div className='col-sm-12'>
+                                {giangVienHocPhan.map((item=>{
+                                    return  <span className={item.hocPhan.id == kehoach?.hocPhan.id?'activespmn':''}>{item.hocPhan.tenHP} - {item.loaiNhom}, </span>
+                                }))}
+                                Số nhóm {soNhomDay}
+                            </div>
                             <div class="tablediv">
                                 <div class="headertable">
                                     <span class="lbtable">Danh sách phân công </span>
@@ -256,7 +301,7 @@ const TruongBoMonKeHoach = ()=>{
                                                 return  <tr>
                                                     <td>{item.giangVien.maCB}</td>
                                                     <td>{item.giangVien.tenGV}</td>
-                                                    <td>{item.soNhom}</td>
+                                                    <td>{item.soNhom} {item.loaiNhom != "ALL"?" - "+item.loaiNhom:''} </td>
                                                     <td>{item.ngayCapNhat}</td>
                                                     <td class="sticky-col">
                                                         <button onClick={()=>deletePhanCong(item.id)} class="delete-btn"><i className='fa fa-trash'></i></button>

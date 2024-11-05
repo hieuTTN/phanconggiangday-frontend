@@ -13,6 +13,7 @@ async function handleAddGiangDay(event) {
     event.preventDefault();
     
     const payload = {
+        loaiNhom:event.target.elements.loaiNhom.value,
         hocPhan: {
             id:event.target.elements.hocphan.value
         },
@@ -113,6 +114,7 @@ const TeacherGiangDay = ()=>{
                                 <th>Số tín chỉ</th>
                                 <th>Tín lý thuyết</th>
                                 <th>Tín thực hành</th>
+                                <th>Loại nhóm dạy</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -123,6 +125,7 @@ const TeacherGiangDay = ()=>{
                                     <td>{item.hocPhan.soTinChi}</td>
                                     <td>{item.hocPhan.soTietLyThuyet}</td>
                                     <td>{item.hocPhan.soTietThucHanh}</td>
+                                    <td>{item.loaiNhom}</td>
                                     <td class="sticky-col">
                                         <button onClick={()=>deleteGiangDay(item.id)} class="delete-btn"><i className='fa fa-trash'></i></button>
                                     </td>
@@ -150,7 +153,7 @@ const TeacherGiangDay = ()=>{
                 </div>
             </div>
             <div class="modal fade" id="addtk" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
-                <div class="modal-dialog modal-lg">
+                <div class="modal-dialog modal-md">
                     <div class="modal-content">
                         <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Thêm môn học giảng dạy {teacher?.boMon.tenBoMon}</h5> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
@@ -167,6 +170,14 @@ const TeacherGiangDay = ()=>{
                                         name='hocphan'
                                         placeholder="Chọn học phần"
                                     />
+                                </div>
+                                <div className='col-sm-12'>
+                                    <label class="lb-form">Loại</label>
+                                    <select name='loaiNhom' className='form-control'>
+                                        <option value='ALL'>Lý thuyết + Thực hành</option>
+                                        <option value='LT'>Lý thuyết</option>
+                                        <option value='TH'>Thực hành</option>
+                                    </select>
                                 </div>
                                 <div className='col-sm-4'></div>
                                 <div className='col-sm-4'>
