@@ -19,6 +19,7 @@ const AdminKeHoachChiTiet = ()=>{
     const [namHoc, setnamHoc] = useState([]);
     const [selectNamHoc, setSelectNamHoc] = useState(null);
     const [pageCount, setpageCount] = useState(0);
+    const [pagecurrent, setpagecurrent] = useState(0);
     const [totalElement, setTotalElement] = useState(0);
 
     useEffect(()=>{
@@ -61,6 +62,7 @@ const AdminKeHoachChiTiet = ()=>{
 
     const handlePageClick = async (data)=>{
         var currentPage = data.selected
+        setpagecurrent(currentPage)
         var response = await getMethod(url+currentPage)
         var result = await response.json();
         setItems(result.content)
@@ -89,12 +91,46 @@ const AdminKeHoachChiTiet = ()=>{
         }
     }
 
+    async function lockOrUnlock(id) {
+        const response = await postMethod('/api/ke-hoach-chi-tiet/all/lock-single?id='+id)
+        if (response.status < 300) {
+            toast.success("Cập nhật thành công")
+            var urls = url;
+            if(url == ""){
+                urls =  '/api/ke-hoach-chi-tiet/all/find-by-kehoach?&size='+size+'&idNamHoc='+selectNamHoc.id+'&sort=tongSoNhom,asc&page='
+            }
+            var res = await getMethod(urls+pagecurrent)
+            var result = await res.json();
+            setItems(result.content)
+            setpageCount(result.totalPages)
+        } 
+        else {
+            toast.error("Thất bại");
+        }
+    }
+
+    async function khoaTatca() {
+        var con = window.confirm("Xác nhận khóa tất cả kế hoạch kỳ này?");
+        if(con == false){
+            return;
+        }
+        const response = await postMethod('/api/ke-hoach-chi-tiet/all/lock?idNamHoc='+selectNamHoc.id)
+        if (response.status < 300) {
+            toast.success("Cập nhật thành công")
+            locKeHoach();
+        } 
+        else {
+            toast.error("Thất bại");
+        }
+    }
+
     return (
         <>
             <div class="headerpageadmin d-flex justify-content-between align-items-center p-3 bg-light border">
                 <strong class="text-left"><i className='fa fa-users'></i> Quản Lý Kế Hoạch Chi Tiết - tìm thấy {totalElement} học phần</strong>
                 <div class="search-wrapper d-flex align-items-center">
                     <div className='d-flex divngayadmin'>
+                        {selectNamHoc == null?'':<button onClick={()=>khoaTatca()} className='btn btn-danger selectheader'>Khóa kế hoạch</button>}
                         <input onKeyUp={searchKeHoach} id='search' placeholder='Nhập mã hoặc tên môn học' className='selectheader'/>  
                         <Select
                             className="select-container selectheader" 
@@ -124,9 +160,10 @@ const AdminKeHoachChiTiet = ()=>{
                                 <th>Tổng sinh viên</th>
                                 <th>Học phần</th>
                                 <th>Bộ môn</th>
+                                <th>Khóa</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id='tbodymap'>
                             {items.map((item=>{
                                 return  <tr>
                                     <td>{item.id}</td>
@@ -141,6 +178,12 @@ const AdminKeHoachChiTiet = ()=>{
                                     <td>{item.tongSinhVien}</td>
                                     <td>{item.hocPhan.maHP} - {item.hocPhan.tenHP}</td>
                                     <td>{item.hocPhan.boMon?.tenBoMon}</td>
+                                    <td>
+                                        <label class="checkbox-custom cateparent">
+                                            <input onChange={()=>lockOrUnlock(item.id)} checked={item.locked} class="inputchecktrademark" type="checkbox"/>
+                                            <span class="checkmark-checkbox"></span>
+                                        </label>
+                                    </td>
                                 </tr>
                             }))}
                         </tbody>

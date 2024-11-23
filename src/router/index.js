@@ -21,6 +21,7 @@ import AdminChiTietTinTuc from '../pages/admin/chitiettintuc'
 import AdminChiTietHoc from '../pages/admin/chitiethoc'
 import AdminLopHoc from '../pages/admin/lophoc'
 import AdminKeHoachChiTiet from '../pages/admin/kehoachchitiet'
+import AdminPhanCong from '../pages/admin/phancong'
 
 
 //public
@@ -86,6 +87,7 @@ const adminRoutes = [
     { path: "/admin/chi-tiet-hoc", component: AdminChiTietHoc, layout: layoutAdmin },
     { path: "/admin/lop-hoc", component: AdminLopHoc, layout: layoutAdmin },
     { path: "/admin/chi-tiet-ke-hoach", component: AdminKeHoachChiTiet, layout: layoutAdmin },
+    { path: "/admin/phan-cong", component: AdminPhanCong, layout: layoutAdmin },
 ];
 
 

@@ -84,6 +84,11 @@ const TruongBoMonKeHoach = ()=>{
         var response = await getMethod('/api/phan-cong-giang-vien/head-department/find-by-ke-hoach?keHoachId='+item.id)
         var result = await response.json();
         setListKeHoach(result)
+
+        setSelectGiangVien(null);
+        var response = await getMethod('/api/giang-vien/head-department/find-all-by-hoc-phan?idhocphan='+item.hocPhan.id)
+        var result = await response.json();
+        setGiangVien(result)
     }
     
 
@@ -187,6 +192,8 @@ const TruongBoMonKeHoach = ()=>{
                                 var tongNhomAll = 0; 
                                 var tongNhomLT = 0; 
                                 var tongNhomTH = 0; 
+                                var tongNhomTam = 0; 
+                                var nhomLe = "";
                                 var phanHoi = <></>
                                 for(var i=0; i< item.phanCongGiangViens.length; i++){
                                     var phanCong = item.phanCongGiangViens[i];
@@ -203,20 +210,27 @@ const TruongBoMonKeHoach = ()=>{
                                         phanHoi = <button onClick={()=>loadDanhSachGv(item)} data-bs-toggle="modal" data-bs-target="#modelphanhoi" className='delete-btn top10'>Phản hồi</button>
                                     }
                                 }
-                                if(tongNhomLT == tongNhomTH){
+                                tongNhomTam = tongNhomAll
+                                if(Number(tongNhomLT) == Number(tongNhomTH)){
                                     tongNhomAll = Number(tongNhomAll) + Number(tongNhomLT);
+                                    tongNhomTam = Number(tongNhomAll) + Number(tongNhomLT);
                                 }
                                 if(tongNhomLT > tongNhomTH){
                                     tongNhomAll = Number(tongNhomAll) + Number(tongNhomTH);
+                                    tongNhomTam = Number(tongNhomTam) + Number(tongNhomLT);
+                                    nhomLe = tongNhomLT - tongNhomTH + " - TH"
                                 }
                                 if(tongNhomTH > tongNhomLT){
                                     tongNhomAll = Number(tongNhomAll) + Number(tongNhomLT);
+                                    tongNhomTam = Number(tongNhomTam) + Number(tongNhomTH);
+                                    nhomLe = tongNhomTH - tongNhomLT + " - LT"
                                 }
                                 var btn = <span className='errorpc'>Chưa phân công xong</span>
                                 if(tongNhomAll == item.tongSoNhom){
                                     tongNhomAll = Number(tongNhomAll) - Number(tongNhomLT)
                                     btn = <span className='successpc'>Đã công xong</span>
                                 }
+                                
                                 return  <tr>
                                     <td>{item.id}</td>
                                     <td>{item.soLuongSinhVienNhom}</td>
@@ -230,7 +244,7 @@ const TruongBoMonKeHoach = ()=>{
                                     <td>{item.tongSinhVien}</td>
                                     <td>{item.hocPhan.maHP} - {item.hocPhan.tenHP}</td>
                                     <td>{item.hocPhan.boMon?.tenBoMon}</td>
-                                    <td>{btn}</td>
+                                    <td>{btn}<br/>Còn lại: <br/>{item.tongSoNhom - tongNhomTam} - LT+TH<br/>{nhomLe}</td>
                                     <td class="sticky-col">
                                         <button onClick={()=>loadDanhSachGv(item)} data-bs-toggle="modal" data-bs-target="#addtk" class="edit-btn"><i className='fa fa-user-plus'></i></button>
                                         {phanHoi}
@@ -322,7 +336,7 @@ const TruongBoMonKeHoach = ()=>{
                                                 return  <tr>
                                                     <td>{item.giangVien.maCB}</td>
                                                     <td>{item.giangVien.tenGV}</td>
-                                                    <td>{item.soNhom} {item.loaiNhom != "ALL"?" - "+item.loaiNhom:''} </td>
+                                                    <td>{item.soNhom} {item.loaiNhom != "ALL"?" - "+item.loaiNhom:' - LT + TH'} </td>
                                                     <td>{item.ngayCapNhat}</td>
                                                     <td class="sticky-col">
                                                         <button onClick={()=>deletePhanCong(item.id)} class="delete-btn"><i className='fa fa-trash'></i></button>

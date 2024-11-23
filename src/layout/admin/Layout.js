@@ -115,6 +115,11 @@ function Header({ children }){
                         <i class="fa fa-calendar"></i> Kế hoạch học
                     </a>
                 </li>
+                <li className={isActive(["/admin/phan-cong"])}>
+                    <a href="phan-cong" class="text-white text-decoration-none">
+                        <i class="fa fa-calendar"></i> Phân công
+                    </a>
+                </li>
                 <li className={isActive(["/admin/index", "/admin/add-bai-viet"])}>
                     <a href="#colbaiviet" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle text-white text-decoration-none">
                         <i class="fa fa-newspaper"></i> Bài viết
