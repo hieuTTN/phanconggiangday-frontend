@@ -81,6 +81,7 @@ const AdminPhanCong = ()=>{
                                 <th>Họ tên</th>
                                 <th>Bộ môn</th>
                                 <th>Số tiết dạy</th>
+                                <th>Số tiết thực tế</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -90,6 +91,7 @@ const AdminPhanCong = ()=>{
                                     <td>{item.giangVien.tenGV}</td>
                                     <td>{item.giangVien.boMon?.tenBoMon}</td>
                                     <td>{item.soTiet}</td>
+                                    <td>{item.soTietThucTe}</td>
                                 </tr>
                             }))}
                         </tbody>
