@@ -58,6 +58,11 @@ function Header({ children }){
                         <i class="fa fa-book"></i> Kế hoạch
                     </a>
                 </li>
+                <li className={isActive(["/truongbomon/giang-day"])}>
+                    <a href="giang-day" class="text-white text-decoration-none">
+                        <i class="fa fa-book"></i> Giảng dạy
+                    </a>
+                </li>
                 <li>
                     <a href="#" onClick={logout} class="text-white text-decoration-none">
                         <i class="fa fa-sign-out"></i> Đăng xuất

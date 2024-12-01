@@ -91,6 +91,28 @@ const AdminKeHoachChiTiet = ()=>{
         }
     }
 
+    async function updateTongSoLuong(event) {
+        event.preventDefault();
+        var idct = event.target.elements.idct.value
+        var soluong = event.target.elements.soluong.value
+        var url = '/api/ke-hoach-chi-tiet/admin/update-tong-soluong-sinh-vien?id='+idct+'&tongSL='+soluong
+        const response = await postMethod(url)
+        if (response.status < 300) {
+            toast.success("Cập nhật thành công")
+            event.target.elements.soluong.value = null;
+            getKeHoachChiTiet(selectNamHoc.id)
+        } 
+        else {
+            if (response.status == 417) {
+                var result = await response.json()
+                toast.warning(result.defaultMessage);
+            }
+            else{
+                 toast.error("Thất bại");
+            }
+        }
+    }
+
     async function lockOrUnlock(id) {
         const response = await postMethod('/api/ke-hoach-chi-tiet/all/lock-single?id='+id)
         if (response.status < 300) {
@@ -124,6 +146,13 @@ const AdminKeHoachChiTiet = ()=>{
         }
     }
 
+    const handleInputChange = (id, field, value) => {
+        setItems((prevItems) =>
+            prevItems.map((item) =>
+                item.id === id ? { ...item, [field]: value } : item
+            )
+        );
+    };
     return (
         <>
             <div class="headerpageadmin d-flex justify-content-between align-items-center p-3 bg-light border">
@@ -170,12 +199,20 @@ const AdminKeHoachChiTiet = ()=>{
                                     <td>
                                         <form onSubmit={updateSoLuong}>
                                             <input name='idct' value={item.id} type='hidden'/>
-                                            <input required name='soluong' defaultValue={item.soLuongSinhVienNhom} className='inputnoborder' placeholder='0'/>
+                                            <input required name='soluong' onChange={(e) => handleInputChange(item.id, 'soLuongSinhVienNhom', e.target.value)}
+                                            value={item.soLuongSinhVienNhom || ''} className='inputnoborder' placeholder='0'/>
                                             <button className='edit-btn'><i class="fa fa-edit"></i></button>
                                         </form>
                                     </td>
                                     <td>{item.tongSoNhom}</td>
-                                    <td>{item.tongSinhVien}</td>
+                                    <td>
+                                        <form onSubmit={updateTongSoLuong}>
+                                            <input name='idct' value={item.id} type='hidden'/>
+                                            <input required name='soluong' onChange={(e) => handleInputChange(item.id, 'tongSinhVien', e.target.value)} 
+                                                value={item.tongSinhVien || ''} className='inputnoborder' />
+                                            <button className='edit-btn'><i class="fa fa-edit"></i></button>
+                                        </form>
+                                    </td>
                                     <td>{item.hocPhan.maHP} - {item.hocPhan.tenHP}</td>
                                     <td>{item.hocPhan.boMon?.tenBoMon}</td>
                                     <td>

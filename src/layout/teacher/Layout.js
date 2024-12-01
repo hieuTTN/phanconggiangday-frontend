@@ -69,17 +69,17 @@ function Header({ children }){
                         </li>
                     </ul>
                 </li>
-                <li className={isActive("/admin/phancong")}>
+                <li className={isActive("/teacher/phancong")}>
                     <a href="phancong" class="text-white text-decoration-none">
                         <i class="fa fa-calendar"></i> Phân công
                     </a>
                 </li>
-                <li className={isActive("/admin/bao-cao")}>
+                <li className={isActive("/teacher/bao-cao")}>
                     <a href="bao-cao" class="text-white text-decoration-none">
                         <i class="fa fa-list"></i> Báo cáo
                     </a>
                 </li>
-                <li className={isActive("/admin/giang-day")}>
+                <li className={isActive("/teacher/giang-day")}>
                     <a href="giang-day" class="text-white text-decoration-none">
                         <i class="fa fa-book"></i> Giảng dạy
                     </a>

@@ -42,6 +42,7 @@ import TeacherInforTBM from '../pages/headdepartment/taikhoan'
 import DoiMatKhauTBM from '../pages/headdepartment/doimatkhau'
 import TBMChiTietTinTuc from '../pages/headdepartment/chitiettintuc'
 import HomeTBM from '../pages/headdepartment/index'
+import TBMGiangDay from '../pages/headdepartment/giangday'
 
 
 
@@ -66,6 +67,7 @@ const truongBoMonRoutes = [
     { path: "/truongbomon/doimatkhau", component: DoiMatKhauTBM, layout:layoutTruongBoMon },
     { path: "/truongbomon/index", component: HomeTBM, layout:layoutTruongBoMon },
     { path: "/truongbomon/chi-tiet-tin-tuc", component: TBMChiTietTinTuc, layout:layoutTruongBoMon },
+    { path: "/truongbomon/giang-day", component: TBMGiangDay, layout:layoutTruongBoMon },
 ];
 
 
