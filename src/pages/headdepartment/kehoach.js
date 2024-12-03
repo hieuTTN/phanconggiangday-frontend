@@ -221,11 +221,13 @@ const TruongBoMonKeHoach = ()=>{
                                 var tongNhomTH = 0; 
                                 var tongNhomTam = 0; 
                                 var nhomLe = "";
+                                var tongLTTH = 0;
                                 var phanHoi = <></>
                                 for(var i=0; i< item.phanCongGiangViens.length; i++){
                                     var phanCong = item.phanCongGiangViens[i];
                                     if(phanCong.loaiNhom == "ALL"){
                                         tongNhomAll = Number(tongNhomAll) + Number(phanCong.soNhom)
+                                        tongLTTH = Number(tongLTTH) + Number(phanCong.soNhom)
                                     }
                                     if(phanCong.loaiNhom == "LT"){
                                         tongNhomLT = Number(tongNhomLT) + Number(phanCong.soNhom)
@@ -240,7 +242,7 @@ const TruongBoMonKeHoach = ()=>{
                                 tongNhomTam = tongNhomAll
                                 if(Number(tongNhomLT) == Number(tongNhomTH)){
                                     tongNhomAll = Number(tongNhomAll) + Number(tongNhomLT);
-                                    tongNhomTam = Number(tongNhomAll) + Number(tongNhomLT);
+                                    tongNhomTam = Number(tongNhomTam) + Number(tongNhomLT);
                                 }
                                 if(tongNhomLT > tongNhomTH){
                                     tongNhomAll = Number(tongNhomAll) + Number(tongNhomTH);
@@ -252,6 +254,7 @@ const TruongBoMonKeHoach = ()=>{
                                     tongNhomTam = Number(tongNhomTam) + Number(tongNhomTH);
                                     nhomLe = tongNhomTH - tongNhomLT + " - LT"
                                 }
+                                var tongLTTHText = (Number(item.tongSoNhom) - Number(tongNhomTam)) +' - LT + TH'
                                 var btn = <span className='errorpc'>Chưa phân công xong</span>
                                 if(tongNhomAll == item.tongSoNhom){
                                     tongNhomAll = Number(tongNhomAll) - Number(tongNhomLT)
@@ -262,7 +265,7 @@ const TruongBoMonKeHoach = ()=>{
                                     <td>{item.id}</td>
                                     <td>{item.soLuongSinhVienNhom}</td>
                                     <td>{item.tongSoNhom}</td>
-                                    <td>{tongNhomAll} - LT+TH<br/>{tongNhomLT} -LT<br/>{tongNhomTH} -TH</td>
+                                    <td>{tongLTTH} - LT+TH<br/>{tongNhomLT} -LT<br/>{tongNhomTH} -TH</td>
                                     <td>
                                     {item.phanCongGiangViens.map((phanCong=>{
                                         return <span>{phanCong.giangVien.maCB} - {phanCong.giangVien.tenGV}, 
@@ -274,7 +277,7 @@ const TruongBoMonKeHoach = ()=>{
                                     <td>{item.tongSinhVien}</td>
                                     <td>{item.hocPhan.maHP} - {item.hocPhan.tenHP}</td>
                                     <td>{item.hocPhan.boMon?.tenBoMon}</td>
-                                    <td>{btn}<br/>Còn lại: <br/>{item.tongSoNhom - tongNhomTam} - LT+TH<br/>{nhomLe}</td>
+                                    <td>{btn}<br/>Còn lại: <br/>{tongLTTHText}<br/>{nhomLe}</td>
                                     <td class="sticky-col">
                                         <button onClick={()=>loadDanhSachGv(item)} data-bs-toggle="modal" data-bs-target="#addtk" class="edit-btn"><i className='fa fa-user-plus'></i></button>
                                         {phanHoi}

@@ -65,9 +65,24 @@ const AdminUser = ()=>{
 
     async function filterUser(){
         var role = document.getElementById("role").value
+        document.getElementById("search").value = "";
         var curUrl = '/api/user/admin/get-user-by-role?&size='+size+'&sort=id,desc&role='+role+'&page=';
         if(role == ""){
             curUrl = '/api/user/admin/get-user-by-role?&size='+size+'&sort=id,desc&page=';
+        }
+        var response = await getMethod(curUrl+0)
+        var result = await response.json();
+        setItems(result.content)
+        setpageCount(result.totalPages)
+        url = curUrl;
+    }
+
+    async function searchUser(){
+        var role = document.getElementById("role").value
+        var search = document.getElementById("search").value
+        var curUrl = '/api/user/admin/get-user-by-role?&size='+size+'&sort=id,desc&role='+role+'&q='+search+'&page=';
+        if(role == ""){
+            curUrl = '/api/user/admin/get-user-by-role?&size='+size+'&q='+search+'&sort=id,desc&page=';
         }
         var response = await getMethod(curUrl+0)
         var result = await response.json();
@@ -110,8 +125,9 @@ const AdminUser = ()=>{
             <div class="headerpageadmin d-flex justify-content-between align-items-center p-3 bg-light border">
                 <strong class="text-left"><i className='fa fa-users'></i> Quản Lý Tài Khoản</strong>
                 <div class="search-wrapper d-flex align-items-center">
-                    <div class="search-container">
-                        <select onChange={()=>filterUser()} id='role' class="form-control">
+                    <div class="d-flex divngayadmin">
+                        <input onKeyUp={searchUser} id='search' placeholder='Nhập email hoặc họ tên' className='selectheader'/>  
+                        <select onChange={()=>filterUser()} id='role' class="form-control selectheader">
                             <option value="">Tất cả quyền</option>
                         {authorities.map((item=>{
                             return <option value={item.name}>{item.description}</option>
