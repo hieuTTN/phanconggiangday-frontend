@@ -82,7 +82,7 @@ function Header({ children }){
                         </li>
                     </ul>
                 </li>
-                <li className={isActive(["/admin/ke-hoach", "/admin/add-ke-hoach"])}>
+                <li className={isActive(["/admin/ke-hoach", "/admin/add-ke-hoach", "/admin/chi-tiet-ke-hoach"])}>
                     <a href="#colkehoach" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle text-white text-decoration-none">
                         <i class="fa fa-calendar-check"></i> Kế hoạch mở môn
                     </a>
@@ -92,6 +92,9 @@ function Header({ children }){
                         </li>
                         <li class="nav-item">
                             <a href="add-ke-hoach" class="text-white text-decoration-none ps-4"><i class="fa fa-plus"></i> Thêm kế hoạch</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="chi-tiet-ke-hoach" class="text-white text-decoration-none ps-4"><i class="fa fa-list"></i> Chi tiết kế hoạch</a>
                         </li>
                     </ul>
                 </li>

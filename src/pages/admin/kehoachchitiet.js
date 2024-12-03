@@ -9,6 +9,35 @@ import Select from 'react-select';
 
 
 var token = localStorage.getItem("token");
+async function saveChiTiet(event) {
+    event.preventDefault();
+    var namHoc = event.target.elements.namHoc.value
+    var hocphan = event.target.elements.hocphan.value
+    var tongsinhvien = event.target.elements.tongsinhvien.value
+    var slsinhviennhom = event.target.elements.slsinhviennhom.value
+    var urs = '/api/ke-hoach-chi-tiet/admin/add?idMonHoc='+hocphan+'&idNamHoc='+namHoc;
+    if(tongsinhvien != "") urs += '&tongSv='+tongsinhvien
+    if(slsinhviennhom != "") urs += '&soLuongSvNhom='+slsinhviennhom
+    const response = await postMethod(urs)
+    if (response.status < 300) {
+        Swal.fire({
+            title: "Thông báo",
+            text: "Thêm thành công!",
+            preConfirm: () => {
+                window.location.reload();
+            }
+        });
+    } 
+    else {
+        if (response.status == 417) {
+            var result = await response.json()
+            toast.warning(result.defaultMessage);
+        }
+        else{
+             toast.error("Thêm thất bại");
+        }
+    }
+}
 
 
 
@@ -17,6 +46,7 @@ var url = '';
 const AdminKeHoachChiTiet = ()=>{
     const [items, setItems] = useState([]);
     const [namHoc, setnamHoc] = useState([]);
+    const [hocphan, sethocphan] = useState([]);
     const [selectNamHoc, setSelectNamHoc] = useState(null);
     const [pageCount, setpageCount] = useState(0);
     const [pagecurrent, setpagecurrent] = useState(0);
@@ -28,6 +58,7 @@ const AdminKeHoachChiTiet = ()=>{
             var result = await response.json();
             setnamHoc(result)
             getKeHoachChiTiet(result[result.length-1].id)
+
         };
         getSelect();
     }, []);
@@ -119,7 +150,7 @@ const AdminKeHoachChiTiet = ()=>{
             toast.success("Cập nhật thành công")
             var urls = url;
             if(url == ""){
-                urls =  '/api/ke-hoach-chi-tiet/all/find-by-kehoach?&size='+size+'&idNamHoc='+selectNamHoc.id+'&sort=tongSoNhom,asc&page='
+                urls =  '/api/ke-hoach-chi-tiet/all/find-by-kehoach?&size='+size+'&idNamHoc='+selectNamHoc.id+'&sort=id,desc&sort=tongSoNhom,asc&page='
             }
             var res = await getMethod(urls+pagecurrent)
             var result = await res.json();
@@ -153,6 +184,33 @@ const AdminKeHoachChiTiet = ()=>{
             )
         );
     };
+
+    async function loadHocPhan(option) {
+        var response = await getMethod('/api/hoc-phan/all/find-all-list-by-nam-hoc?idNamHoc='+option.id)
+        var result = await response.json();
+        toast.success("Tìm thấy "+result.length+" học phần chưa được mở trong học kỳ này")
+        sethocphan(result)
+    }
+
+    async function deleteChiTiet(id){
+        var con = window.confirm("Bạn chắc chắn muốn xóa chi tiết kế hoạch này?");
+        if (con == false) {
+            return;
+        }
+        var response = await deleteMethod('/api/ke-hoach-chi-tiet/admin/delete?id='+id)
+        if (response.status < 300) {
+            toast.success("xóa thành công!");
+            var response = await getMethod(url+pagecurrent)
+            var result = await response.json();
+            setItems(result.content)
+            setpageCount(result.totalPages)
+        }
+        else{
+            toast.warning("Đã có liên kết, không thể xóa");
+        }
+    }
+
+
     return (
         <>
             <div class="headerpageadmin d-flex justify-content-between align-items-center p-3 bg-light border">
@@ -172,6 +230,7 @@ const AdminKeHoachChiTiet = ()=>{
                             placeholder="Chọn năm học"
                         /> 
                         <button onClick={locKeHoach} className='btn btn-primary selectheader'>Lọc</button>
+                        <button data-bs-toggle="modal" data-bs-target="#addtk" className='btn btn-primary selectheader'><i class="fa fa-plus"></i></button>
                     </div>
                 </div>
             </div>
@@ -190,6 +249,7 @@ const AdminKeHoachChiTiet = ()=>{
                                 <th>Học phần</th>
                                 <th>Bộ môn</th>
                                 <th>Khóa</th>
+                                <th>Xóa</th>
                             </tr>
                         </thead>
                         <tbody id='tbodymap'>
@@ -221,6 +281,9 @@ const AdminKeHoachChiTiet = ()=>{
                                             <span class="checkmark-checkbox"></span>
                                         </label>
                                     </td>
+                                    <td>
+                                        <button onClick={()=>deleteChiTiet(item.id)} class="delete-btn"><i className='fa fa-trash'></i></button>
+                                    </td>
                                 </tr>
                             }))}
                         </tbody>
@@ -245,6 +308,41 @@ const AdminKeHoachChiTiet = ()=>{
                 </div>
             </div>
 
+            <div class="modal fade" id="addtk" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Thêm chi tiết kế hoạch</h5> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+                        <div class="modal-body row">
+                            <form onSubmit={saveChiTiet} class="col-sm-6" style={{margin:'auto'}}>
+                                <label className='lb-form'>Chọn học kỳ - năm học</label>
+                                <Select
+                                    options={namHoc}
+                                    onChange={loadHocPhan}
+                                    getOptionLabel={(option) => option.tenNamHoc + " - "+option.hocKy} 
+                                    getOptionValue={(option) => option.id}    
+                                    name='namHoc'
+                                    placeholder="Chọn năm học"
+                                /> 
+                                <label className='lb-form'>Chọn học phần</label>
+                                <Select
+                                    options={hocphan}
+                                    getOptionLabel={(option) => option.maHP + " - "+option.tenHP} 
+                                    getOptionValue={(option) => option.id}    
+                                    name='hocphan'
+                                    placeholder="Chọn học phần muốn mở"
+                                />
+                                <label className='lb-form'>Tổng sinh viên (có thể bỏ trống)</label>
+                                <input name='tongsinhvien' className='form-control'/>
+                                <label className='lb-form'>Số lượng sinh viên / nhóm (có thể bỏ trống)</label>
+                                <input name='slsinhviennhom' className='form-control'/>
+                                <br/>
+                                <button class="form-control btn btn-primary">Thêm chi tiết kế hoạch</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </>
     );
 }

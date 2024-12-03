@@ -63,6 +63,11 @@ function Header({ children }){
                         <i class="fa fa-book"></i> Giảng dạy
                     </a>
                 </li>
+                <li className={isActive(["/truongbomon/phan-cong"])}>
+                    <a href="phan-cong" class="text-white text-decoration-none">
+                        <i class="fa fa-calendar"></i> Phân công
+                    </a>
+                </li>
                 <li>
                     <a href="#" onClick={logout} class="text-white text-decoration-none">
                         <i class="fa fa-sign-out"></i> Đăng xuất
