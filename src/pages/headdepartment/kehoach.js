@@ -4,7 +4,7 @@ import {toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import $ from 'jquery'; 
 import Swal from 'sweetalert2'
-import {getMethod,postMethodPayload, deleteMethod} from '../../services/request';
+import {getMethod,postMethodPayload, deleteMethod, postMethod} from '../../services/request';
 import Select from 'react-select';
 
 
@@ -44,7 +44,7 @@ const TruongBoMonKeHoach = ()=>{
     }, []);
 
     const getKeHoachChiTiet = async(idnamhoc, search) =>{
-        var urlfr = '/api/ke-hoach-chi-tiet/head-department/find-by-namHoc?&size='+size+'&idNamHoc='+idnamhoc+'&sort=tongSoNhom,asc'
+        var urlfr = '/api/ke-hoach-chi-tiet/head-department/find-by-namHoc?&size='+size+'&idNamHoc='+idnamhoc+'&sort=id,asc'
         if(search != null && search != undefined){
             urlfr += '&search='+search
         }
@@ -145,6 +145,33 @@ const TruongBoMonKeHoach = ()=>{
         setSoNhomDay(result.soNhomDay)
     }
 
+    function setThongTinNhom(item){
+        document.getElementById("idphancongupdate").value = item.id
+        document.getElementById("sonhomupdate").value = item.soNhom
+        document.getElementById("loaiNhomupdate").value = item.loaiNhom
+    }
+
+    async function handleUpdatePhanCong(event) {
+        event.preventDefault();
+        var id = document.getElementById("idphancongupdate").value
+        var sonhomupdate = document.getElementById("sonhomupdate").value
+        var loaiNhomupdate = document.getElementById("loaiNhomupdate").value
+        const res = await postMethod('/api/phan-cong-giang-vien/head-department/update?id='+id+'&soNhom='+sonhomupdate+'&loaiNhom='+loaiNhomupdate)
+        var result = await res.json()
+        console.log(result);
+        if (res.status == 417) {
+            toast.error(result.defaultMessage);
+        }
+        if(res.status < 300){
+            toast.success("Thành công!");
+            var response = await getMethod(url+0)
+            var result = await response.json();
+            setItems(result.content)
+            setpageCount(result.totalPages)
+        }
+    };
+
+
     return (
         <>
             <div class="headerpageadmin d-flex justify-content-between align-items-center p-3 bg-light border">
@@ -238,7 +265,10 @@ const TruongBoMonKeHoach = ()=>{
                                     <td>{tongNhomAll} - LT+TH<br/>{tongNhomLT} -LT<br/>{tongNhomTH} -TH</td>
                                     <td>
                                     {item.phanCongGiangViens.map((phanCong=>{
-                                        return <span>{phanCong.giangVien.maCB} - {phanCong.giangVien.tenGV}, {phanCong.soNhom} {phanCong.loaiNhom != "ALL"?" - "+phanCong.loaiNhom:''}<br/></span>
+                                        return <span>{phanCong.giangVien.maCB} - {phanCong.giangVien.tenGV}, 
+                                        <br/>{phanCong.soNhom} {phanCong.loaiNhom != "ALL"?" - "+phanCong.loaiNhom:''}
+                                         <button onClick={()=>setThongTinNhom(phanCong)} data-bs-toggle="modal" data-bs-target="#modelcapnhatsonhom" className='edit-btn btnedithp'><i className='fa fa-edit'></i></button>
+                                        <hr/></span>
                                     }))}
                                     </td>
                                     <td>{item.tongSinhVien}</td>
@@ -387,6 +417,30 @@ const TruongBoMonKeHoach = ()=>{
                                     </table>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="modelcapnhatsonhom" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Cập nhật số nhóm giảng dạy</h5> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+                        <div class="modal-body row">
+                            <form onSubmit={handleUpdatePhanCong}>
+                                <label className='lb-form'>Số nhóm</label>
+                                <input id='idphancongupdate' type='hidden'/>
+                                <input id='sonhomupdate' type='number' className='form-control'/>
+                                <label class="lb-form">Loại nhóm</label>
+                                <select id='loaiNhomupdate' className='form-control'>
+                                    <option value='ALL'>LT + TH</option>
+                                    <option value='LT'>LT</option>
+                                    <option value='TH'>TH</option>
+                                </select>
+                                <br/>
+                                <button className='btn btn-primary form-control'>Cập nhật</button>
+                            </form>
                         </div>
                     </div>
                 </div>

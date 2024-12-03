@@ -65,7 +65,12 @@ function Header({ children }){
                 </li>
                 <li className={isActive(["/truongbomon/phan-cong"])}>
                     <a href="phan-cong" class="text-white text-decoration-none">
-                        <i class="fa fa-calendar"></i> Phân công
+                        <i class="fa fa-calendar"></i> Phân công giảng viên
+                    </a>
+                </li>
+                <li className={isActive(["/truongbomon/phan-cong-giang-day"])}>
+                    <a href="phan-cong-giang-day" class="text-white text-decoration-none">
+                        <i class="fa fa-calendar"></i> Phân công giảng dạy
                     </a>
                 </li>
                 <li>

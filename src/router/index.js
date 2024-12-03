@@ -44,6 +44,7 @@ import TBMChiTietTinTuc from '../pages/headdepartment/chitiettintuc'
 import HomeTBM from '../pages/headdepartment/index'
 import TBMGiangDay from '../pages/headdepartment/giangday'
 import TBMPhanCong from '../pages/headdepartment/phancong'
+import TMBPhanCongGiangDay from '../pages/headdepartment/phanconggiangday'
 
 
 
@@ -70,6 +71,7 @@ const truongBoMonRoutes = [
     { path: "/truongbomon/chi-tiet-tin-tuc", component: TBMChiTietTinTuc, layout:layoutTruongBoMon },
     { path: "/truongbomon/giang-day", component: TBMGiangDay, layout:layoutTruongBoMon },
     { path: "/truongbomon/phan-cong", component: TBMPhanCong, layout:layoutTruongBoMon },
+    { path: "/truongbomon/phan-cong-giang-day", component: TMBPhanCongGiangDay, layout:layoutTruongBoMon },
 ];
 
 
