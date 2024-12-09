@@ -18,7 +18,6 @@ async function saveHocPhan(event) {
         "soTinChi": event.target.elements.soTinChi.value,
         "soTietLyThuyet": event.target.elements.soTietLyThuyet.value,
         "soTietThucHanh": event.target.elements.soTietThucHanh.value,
-        "tongSoTiet": event.target.elements.tongSoTiet.value,
         "heSo": event.target.elements.heSo.value,
         "boMon": {
             id:event.target.elements.bomon.value
@@ -107,11 +106,9 @@ const AdminAddHocPhan = ()=>{
                             </div>
                             <div className='col-md-4'>
                                 <label class="lb-form">Số tiết lý thuyết</label>
-                                <input defaultValue={hocphan?.soTietLyThuyet} name="soTietLyThuyet" type="text" class="form-control"/>
+                                <input required defaultValue={hocphan?.soTietLyThuyet} name="soTietLyThuyet" type="text" class="form-control"/>
                                 <label class="lb-form">Số tiết thực hành</label>
-                                <input defaultValue={hocphan?.soTietThucHanh} name="soTietThucHanh" type="text" class="form-control"/>
-                                <label class="lb-form">Tổng số tiết</label>
-                                <input defaultValue={hocphan?.tongSoTiet} name="tongSoTiet" type="text" class="form-control"/>
+                                <input required defaultValue={hocphan?.soTietThucHanh} name="soTietThucHanh" type="text" class="form-control"/>
                                 <label class="lb-form">Hệ số</label>
                                 <input defaultValue={hocphan?.heSo} name="heSo" type="text" class="form-control"/>
 

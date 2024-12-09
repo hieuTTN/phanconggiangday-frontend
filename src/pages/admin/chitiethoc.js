@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import $ from 'jquery'; 
 import Swal from 'sweetalert2'
 import Select from 'react-select';
-import {getMethod,postMethodPayload, deleteMethod} from '../../services/request';
+import {getMethod,postMethodPayload, deleteMethod, postMethod} from '../../services/request';
 
 
 var token = localStorage.getItem("token");
@@ -22,17 +22,11 @@ const AdminChiTietHoc = ()=>{
     const [selectedHocKySearch, setSelectedHocKySearch] = useState(null);
     const [pageCount, setpageCount] = useState(0);
     const [keHoachHoc, setKeHoachHoc] = useState(null);
+    const [hocKyUpdate, setHocKyUpdate] = useState(null);
 
     useEffect(()=>{
         var uls = new URL(document.URL)
         var kehoachhoc = uls.searchParams.get("kehoachhoc");
-        const getChiTietHoc = async() =>{
-            var response = await getMethod('/api/chi-tiet-hoc/all/findAll-page?size='+size+'&keHoachHocId='+kehoachhoc+'&page='+0)
-            var result = await response.json();
-            setItems(result.content)
-            setpageCount(result.totalPages)
-            url = '/api/chi-tiet-hoc/all/findAll-page?size='+size+'&keHoachHocId='+kehoachhoc+'&page=';
-        };
         getChiTietHoc();
         const getHocKy = async() =>{
             var response = await getMethod('/api/hocky/all/find-all')
@@ -54,6 +48,15 @@ const AdminChiTietHoc = ()=>{
         getKeHoachHoc();
     }, []);
 
+        const getChiTietHoc = async() =>{
+            var uls = new URL(document.URL)
+            var kehoachhoc = uls.searchParams.get("kehoachhoc");
+            var response = await getMethod('/api/chi-tiet-hoc/all/findAll-page?size='+size+'&keHoachHocId='+kehoachhoc+'&page='+0)
+            var result = await response.json();
+            setItems(result.content)
+            setpageCount(result.totalPages)
+            url = '/api/chi-tiet-hoc/all/findAll-page?size='+size+'&keHoachHocId='+kehoachhoc+'&page=';
+        };
 
     async function handleAddChiTietHoc(event) {
         event.preventDefault();
@@ -136,6 +139,29 @@ const AdminChiTietHoc = ()=>{
         setpageCount(result.totalPages)
     }
 
+    function setData(item){
+        setHocKyUpdate(item.hocKy)
+        document.getElementById("idcth").value = item.id
+    }
+
+    
+
+    async function uopdateCth(event) {
+        event.preventDefault();
+        var idcth = event.target.elements.idcth.value
+        
+        const res = await postMethod('/api/chi-tiet-hoc/admin/update?id='+idcth+'&hocKyId='+hocKyUpdate.id)
+        var result = await res.json()
+        if (res.status == 417) {
+            toast.error(result.defaultMessage);
+        }
+        if(res.status < 300){
+            toast.success("Thành công");
+            getChiTietHoc();
+        }
+    };
+
+
 
     return (
         <>
@@ -186,6 +212,7 @@ const AdminChiTietHoc = ()=>{
                                     <td>{item.keHoachHoc.nganh.tenNganh}</td>
                                     <td>{item.keHoachHoc.khoaHoc.tenKhoaHoc}</td>
                                     <td class="sticky-col">
+                                        <a onClick={()=>setData(item)} data-bs-toggle="modal" data-bs-target="#modelupdate" href='#' class="edit-btn"><i className='fa fa-edit'></i></a>
                                         <button onClick={()=>deleteChiTietHoc(item.id)} class="delete-btn"><i className='fa fa-trash'></i></button>
                                     </td>
                                 </tr>
@@ -243,6 +270,34 @@ const AdminChiTietHoc = ()=>{
                                 />
                                 <br/>
                                 <button class="form-control btn btn-primary">Thêm danh sách chi tiết học</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="modelupdate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Thêm danh sách chi tiết học</h5> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+                        <div class="modal-body row">
+                            <form onSubmit={uopdateCth} class="col-sm-12">
+                                <input name='idcth' id='idcth' type='hidden' class="form-control"/>
+                                <label class="lb-form">Học kỳ</label>
+                                <Select
+                                    className="select-container" 
+                                    options={hocKy}
+                                    value={hocKyUpdate}
+                                    onChange={setHocKyUpdate}
+                                    getOptionLabel={(option) => option.tenHocKy} 
+                                    getOptionValue={(option) => option.id}    
+                                    closeMenuOnSelect={false}
+                                    name='hocky'
+                                    placeholder="Chọn học kỳ"
+                                />
+                                <br/>
+                                <button class="form-control btn btn-primary">Cập nhật chi tiết học</button>
                             </form>
                         </div>
                     </div>

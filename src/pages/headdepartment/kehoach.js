@@ -4,7 +4,7 @@ import {toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import $ from 'jquery'; 
 import Swal from 'sweetalert2'
-import {getMethod,postMethodPayload, deleteMethod, postMethod} from '../../services/request';
+import {getMethod,postMethodPayload, deleteMethod, postMethod, postMethodText} from '../../services/request';
 import Select from 'react-select';
 
 
@@ -171,6 +171,19 @@ const TruongBoMonKeHoach = ()=>{
         }
     };
 
+    async function hanlePhanHoi(event) {
+        event.preventDefault();
+        var phanHoi = event.target.elements.noiDung.value
+        var idphancong = event.target.elements.idphancong.value
+        const res = await postMethodText('/api/phan-cong-giang-vien/head-department/tra-loi-phan-hoi?id='+idphancong, phanHoi);
+        if (res.status == 417) {
+            var result = await res.json()
+            toast.warning(result.defaultMessage);
+        }
+        if(res.status < 300){
+            toast.success("Đã gửi phản hồi")
+        }
+    };
 
     return (
         <>
@@ -386,7 +399,7 @@ const TruongBoMonKeHoach = ()=>{
             </div>
 
             <div class="modal fade" id="modelphanhoi" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
-                <div class="modal-dialog modal-lg">
+                <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                         <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Phản hồi phân công học phần {kehoach?.hocPhan.tenHP}</h5> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
@@ -404,6 +417,8 @@ const TruongBoMonKeHoach = ()=>{
                                                 <th>Số nhóm dạy</th>
                                                 <th>Ngày phản hồi</th>
                                                 <th>Phản hồi</th>
+                                                <th>Trả lời</th>
+                                                <th>Gửi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -414,6 +429,15 @@ const TruongBoMonKeHoach = ()=>{
                                                     <td>{item.soNhom} {item.loaiNhom != "ALL"?" - "+item.loaiNhom:''} </td>
                                                     <td>{item.ngayPhanHoi}</td>
                                                     <td>{item.phanHoi}</td>
+                                                    <td>
+                                                        <textarea defaultValue={item.traLoiPhanHoi} name='noiDung' form={"formphanhoi"+item.id} className='form-control'></textarea>
+                                                    </td>
+                                                    <td>
+                                                        <form onSubmit={hanlePhanHoi} id={"formphanhoi"+item.id}>
+                                                            <input name='idphancong' value={item.id} type='hidden'/>
+                                                            <button className='btn btn-primary'>Gửi</button>
+                                                        </form>
+                                                    </td>
                                                 </tr>
                                             }))}
                                         </tbody>

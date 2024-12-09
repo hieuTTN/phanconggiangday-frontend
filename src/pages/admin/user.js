@@ -158,9 +158,9 @@ const AdminUser = ()=>{
                             {items.map((item=>{
                                 var btn = '';
                                 if (item.actived == 0) {
-                                    var btn = <button onClick={()=>lockOrUnlock(item.id,0)} class="btn btn-danger"><i class="fa fa-unlock"></i></button>
+                                    var btn = <button onClick={()=>lockOrUnlock(item.id,0)} class="delete-btn"><i class="fa fa-unlock"></i></button>
                                 } else {
-                                    var btn = <button onClick={()=>lockOrUnlock(item.id,1)} class="btn btn-primary"><i class="fa fa-lock"></i></button>
+                                    var btn = <button onClick={()=>lockOrUnlock(item.id,1)} class="edit-btn"><i class="fa fa-lock"></i></button>
                                 }
                                 return  <tr>
                                     <td>{item.id}</td>
@@ -171,6 +171,7 @@ const AdminUser = ()=>{
                                     <td>{item.authorities.name}</td>
                                     <td class="sticky-col">
                                         {btn}
+                                        <a href={"edit-user?id="+item.id} className='edit-btn'><i class="fa fa-edit"></i></a>
                                     </td>
                                 </tr>
                             }))}

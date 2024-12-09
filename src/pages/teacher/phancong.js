@@ -20,6 +20,7 @@ const TeacherPhanCong = ()=>{
     const [namHoc, setnamHoc] = useState([]);
     const [selectNamHoc, setSelectNamHoc] = useState([]);
     const [selectPhanCong, setSelectPhanCong] = useState(null);
+
     useEffect(()=>{
         const getPhanCong = async() =>{
             var response = await getMethod('/api/phan-cong-giang-vien/teacher/phan-cong-cua-toi?&size='+size+'&sort=id,desc&page='+0)
@@ -121,6 +122,7 @@ const TeacherPhanCong = ()=>{
                                     <td>{item.soNhom} {item.loaiNhom != "ALL"?" - "+item.loaiNhom:'TH + LT'}</td>
                                     <td class="sticky-col">
                                         <a onClick={()=>setSelectPhanCong(item)} data-bs-toggle="modal" data-bs-target="#addtk" class="edit-btn"><i className='fa fa-edit'></i></a>
+                                        {item.phanHoi == null ?'':<button onClick={()=>setSelectPhanCong(item)} data-bs-toggle="modal" data-bs-target="#modelph" className='delete-btn'><i className='fa fa-eye'></i></button>}
                                     </td>
                                 </tr>
                             }))}
@@ -162,6 +164,31 @@ const TeacherPhanCong = ()=>{
                                     <button className='btn btn-primary form-control'>Gửi</button>
                                 </div>
                             </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="modelph" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Gửi báo cáo phân công</h5> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+                        <div class="modal-body row">
+                            <table className='table'>
+                                <tr>
+                                    <th>Ngày gửi</th>
+                                    <th>Nội dung gửi</th>
+                                    <th>Ngày phản hồi</th>
+                                    <th>Nội dung phản hồi</th>
+                                </tr>
+                                <tr>
+                                    <td>{selectPhanCong?.ngayPhanHoi}</td>
+                                    <td>{selectPhanCong?.phanHoi}</td>
+                                    <td>{selectPhanCong?.ngayTraLoiPhanHoi}</td>
+                                    <td>{selectPhanCong?.traLoiPhanHoi}</td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                 </div>

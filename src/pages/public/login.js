@@ -93,18 +93,8 @@ function login(){
                         <label class="lbform">Mật khẩu</label>
                         <input required name='password' type="password" id="password" class="inputlogin"/>
                         <button class="btndangnhap">ĐĂNG NHẬP</button>
-                        <button type="button"  onClick={()=>{window.location.href = 'regis'}} class="btndangky">QUÊN MẬT KHẨU</button>
+                        <button type="button"  onClick={()=>{window.location.href = 'quen-mat-khau'}} class="btndangky">QUÊN MẬT KHẨU</button>
                     </form><br/><br/><br/>
-                    <hr/>
-                    <p className='text-center'>Hoặc đăng nhập với google</p>
-                    <GoogleOAuthProvider clientId="663646080535-l004tgn5o5cpspqdglrl3ckgjr3u8nbf.apps.googleusercontent.com">
-                    <div className='divcenter' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <GoogleLogin
-                        onSuccess={handleLoginSuccess}
-                        onError={handleLoginError}
-                    />
-                    </div>
-                    </GoogleOAuthProvider>
                 </div>
             </div>
         </div>

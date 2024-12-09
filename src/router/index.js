@@ -22,10 +22,14 @@ import AdminChiTietHoc from '../pages/admin/chitiethoc'
 import AdminLopHoc from '../pages/admin/lophoc'
 import AdminKeHoachChiTiet from '../pages/admin/kehoachchitiet'
 import AdminPhanCong from '../pages/admin/phancong'
+import DoiMatKhauAdmin from '../pages/admin/doimatkhau'
+import AdminEditUser from '../pages/admin/edituser'
 
 
 //public
 import login from '../pages/public/login'
+import quenMatKhau from '../pages/public/quenmatkhau'
+import datlaimatkhau from '../pages/public/datlaimatkhau'
 
 //teacher
 import taikhoan from '../pages/teacher/taikhoan'
@@ -51,6 +55,8 @@ import TMBPhanCongGiangDay from '../pages/headdepartment/phanconggiangday'
 const publicRoutes = [
     { path: "/", component: login, layout: layoutLogin },
     { path: "/login", component: login, layout: layoutLogin },
+    { path: "/quen-mat-khau", component: quenMatKhau, layout: layoutLogin },
+    { path: "/datlaimatkhau", component: datlaimatkhau, layout: layoutLogin },
 ];
 
 const teacherRoutes = [
@@ -94,6 +100,8 @@ const adminRoutes = [
     { path: "/admin/lop-hoc", component: AdminLopHoc, layout: layoutAdmin },
     { path: "/admin/chi-tiet-ke-hoach", component: AdminKeHoachChiTiet, layout: layoutAdmin },
     { path: "/admin/phan-cong", component: AdminPhanCong, layout: layoutAdmin },
+    { path: "/admin/doi-mat-khau", component: DoiMatKhauAdmin, layout: layoutAdmin },
+    { path: "/admin/edit-user", component: AdminEditUser, layout: layoutAdmin },
 ];
 
 

@@ -170,7 +170,7 @@ function Header({ children }){
                             {/* <img src={user?.avatar} class="rounded-circle" alt="User Avatar"/> */}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="#">Cập nhật thông tin</a></li>
+                            <li><a class="dropdown-item" href="doi-mat-khau">Đổi mật khẩu</a></li>
                             <li onClick={logout}><a class="dropdown-item" href="#">Logout</a></li>
                         </ul>
                     </div>
