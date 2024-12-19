@@ -119,13 +119,15 @@ const TBMGiangDay = ()=>{
                         </thead>
                         <tbody>
                             {items.map((item=>{
+                                var loai = item.loaiNhom;
+                                if(loai == "ALL") loai = "LT + TH"
                                 return  <tr>
                                     <td>{item.hocPhan.maHP}</td>
                                     <td>{item.hocPhan.tenHP}</td>
                                     <td>{item.hocPhan.soTinChi}</td>
                                     <td>{item.hocPhan.soTietLyThuyet}</td>
                                     <td>{item.hocPhan.soTietThucHanh}</td>
-                                    <td>{item.loaiNhom}</td>
+                                    <td>{loai}</td>
                                     <td class="sticky-col">
                                         <button onClick={()=>deleteGiangDay(item.id)} class="delete-btn"><i className='fa fa-trash'></i></button>
                                     </td>

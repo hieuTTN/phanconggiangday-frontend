@@ -24,6 +24,7 @@ import AdminKeHoachChiTiet from '../pages/admin/kehoachchitiet'
 import AdminPhanCong from '../pages/admin/phancong'
 import DoiMatKhauAdmin from '../pages/admin/doimatkhau'
 import AdminEditUser from '../pages/admin/edituser'
+import AdminThongKe from '../pages/admin/thongke'
 
 
 //public
@@ -102,6 +103,7 @@ const adminRoutes = [
     { path: "/admin/phan-cong", component: AdminPhanCong, layout: layoutAdmin },
     { path: "/admin/doi-mat-khau", component: DoiMatKhauAdmin, layout: layoutAdmin },
     { path: "/admin/edit-user", component: AdminEditUser, layout: layoutAdmin },
+    { path: "/admin/thong-ke", component: AdminThongKe, layout: layoutAdmin },
 ];
 
 

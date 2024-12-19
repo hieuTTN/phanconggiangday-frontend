@@ -144,6 +144,16 @@ const AdminLopHoc = ()=>{
         setpageCount(result.totalPages)
     }
 
+    const searchLopHoc = async() =>{
+        var search = document.getElementById("search").value
+        var urlfi = '/api/lophoc/all/findAll-page?size='+size+'&search='+search+'&page=';
+        url = urlfi;
+        var response = await getMethod(urlfi+0)
+        var result = await response.json();
+        setItems(result.content)
+        setpageCount(result.totalPages)
+    };
+
 
     return (
         <>
@@ -151,8 +161,9 @@ const AdminLopHoc = ()=>{
                 <strong class="text-left"><i className='fa fa-users'></i> Quản Lý Lớp Học</strong>
                 <div class="search-wrapper d-flex align-items-center">
                     <div className='d-flex divngayadmin'>
+                        <input onKeyUp={()=>searchLopHoc()} placeholder='Nhập mã lớp' id='search' />
                         <Select
-                            className="select-container" 
+                            className="select-container selectheader" 
                             options={khoaHoc}
                             onChange={setSelectedKhoaHocSearch}
                             value={selectedKhoaHocSearch}

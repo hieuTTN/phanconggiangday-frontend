@@ -19,8 +19,8 @@
     padding-left: 20px;
 }
 #sidebar .list-unstyled li {
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 #sidebar .list-unstyled li.active {
@@ -552,4 +552,7 @@
 }
 .btnedithp{
     margin-left: 10px;
+}
+.headeradminlist{
+    overflow: scroll;
 }

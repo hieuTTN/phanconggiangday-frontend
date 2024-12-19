@@ -136,6 +136,11 @@ function Header({ children }){
                         </li>
                     </ul>
                 </li>
+                <li className={isActive(["/admin/thong-ke"])}>
+                    <a href="thong-ke" class="text-white text-decoration-none">
+                        <i class="fa fa-bar-chart"></i> Thống kê
+                    </a>
+                </li>
                 <li>
                     <a href="#" onClick={logout} class="text-white text-decoration-none">
                         <i class="fa fa-sign-out"></i> Đăng xuất
