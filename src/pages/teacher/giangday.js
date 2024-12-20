@@ -96,7 +96,7 @@ const TeacherGiangDay = ()=>{
     return (
         <>
             <div class="headerpageadmin d-flex justify-content-between align-items-center p-3 bg-light border">
-                <strong class="text-left"><i className='fa fa-users'></i> Học Phần giảng dạy {teacher?.boMon.tenBoMon}</strong>
+                <strong class="text-left"><i className='fa fa-users'></i> Học Phần giảng dạy {teacher?.boMon?.tenBoMon}</strong>
                 <div class="search-wrapper d-flex align-items-center">
                     <button  data-bs-toggle="modal" data-bs-target="#addtk" className='btn btn-primary selectheader'><i class="fa fa-plus"></i></button>
                 </div>
@@ -158,7 +158,7 @@ const TeacherGiangDay = ()=>{
                 <div class="modal-dialog modal-md">
                     <div class="modal-content">
                         <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Thêm môn học giảng dạy {teacher?.boMon.tenBoMon}</h5> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+                        <h5 class="modal-title" id="exampleModalLabel">Thêm môn học giảng dạy {teacher?.boMon?.tenBoMon}</h5> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
                         <div class="modal-body row">
                             <form method='post' onSubmit={handleAddGiangDay} className='row'>
                                 <div className='col-sm-12'>
