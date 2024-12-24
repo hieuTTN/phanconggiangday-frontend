@@ -59,10 +59,7 @@ const AdminHocPhan = ()=>{
         var response = await deleteMethod('/api/hoc-phan/admin/delete?id='+id)
         if (response.status < 300) {
             toast.success("xóa thành công!");
-            var response = await getMethod(url+0)
-            var result = await response.json();
-            setItems(result.content)
-            setpageCount(result.totalPages)
+            setItems((prevItems) => prevItems.filter((item) => item.id !== id));
         }
         if (response.status == 417) {
             var result = await response.json()

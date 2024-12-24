@@ -100,7 +100,7 @@ const AdminKeHoachHoc = ()=>{
         var response = await deleteMethod('/api/ke-hoach-hoc/admin/delete?id='+id)
         if (response.status < 300) {
             toast.success("xóa thành công!");
-            reloadPage();
+            setItems((prevItems) => prevItems.filter((item) => item.id !== id));
         }
         if (response.status == 417) {
             var result = await response.json()

@@ -200,10 +200,7 @@ const AdminKeHoachChiTiet = ()=>{
         var response = await deleteMethod('/api/ke-hoach-chi-tiet/admin/delete?id='+id)
         if (response.status < 300) {
             toast.success("xóa thành công!");
-            var response = await getMethod(url+pagecurrent)
-            var result = await response.json();
-            setItems(result.content)
-            setpageCount(result.totalPages)
+            setItems((prevItems) => prevItems.filter((item) => item.id !== id));
         }
         else{
             toast.warning("Đã có liên kết, không thể xóa");

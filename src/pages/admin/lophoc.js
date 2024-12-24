@@ -102,7 +102,7 @@ const AdminLopHoc = ()=>{
         var response = await deleteMethod('/api/lophoc/admin/delete?id='+id)
         if (response.status < 300) {
             toast.success("xóa thành công!");
-            reloadPage();
+            setItems((prevItems) => prevItems.filter((item) => item.id !== id));
         }
         if (response.status == 417) {
             var result = await response.json()
