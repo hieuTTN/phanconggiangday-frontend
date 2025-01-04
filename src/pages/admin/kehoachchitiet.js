@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import $ from 'jquery'; 
 import Swal from 'sweetalert2'
 import {getMethod,postMethodPayload, deleteMethod, postMethod} from '../../services/request';
+import {exportExcel} from '../../services/excelservice';
 import Select from 'react-select';
 
 
@@ -207,6 +208,12 @@ const AdminKeHoachChiTiet = ()=>{
         }
     }
 
+    async function xuatFileExcel() {
+        var response = await getMethod("/api/thong-ke/all/thong-ke-all?idNamHoc="+selectNamHoc.id)
+        var result = await response.json();
+        exportExcel(result, selectNamHoc)
+    }
+
 
     return (
         <>
@@ -215,6 +222,7 @@ const AdminKeHoachChiTiet = ()=>{
                 <div class="search-wrapper d-flex align-items-center">
                     <div className='d-flex divngayadmin'>
                         {selectNamHoc == null?'':<button onClick={()=>khoaTatca()} className='btn btn-danger selectheader'>Khóa kế hoạch</button>}
+                        {selectNamHoc == null?'':<button onClick={()=>xuatFileExcel()} className='btn btn-primary selectheader'>Xuất kế hoạch</button>}
                         <input onKeyUp={searchKeHoach} id='search' placeholder='Nhập mã hoặc tên môn học' className='selectheader'/>  
                         <Select
                             className="select-container selectheader" 
