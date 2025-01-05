@@ -202,11 +202,11 @@ function getMau2(list, namHoc, workbook){
                 phanCongs[j].keHoachChiTiet.hocPhan.soTinChi, phanCongs[j].keHoachChiTiet.hocPhan.tongSoTiet,
                 phanCongs[j].soNhom + (phanCongs[j].loaiNhom == 'ALL'?'':phanCongs[j].loaiNhom),soTietTh
             ]);
-            worksheet.addRow([
-                'Tổng cộng','','','','','','','','','',soTietTh
-            ]);
-            worksheet.mergeCells(`A${worksheet.lastRow.number}:J${worksheet.lastRow.number}`);
         }
+        worksheet.addRow([
+            'Tổng cộng','','','','','','','','','',soTietTh
+        ]);
+        worksheet.mergeCells(`A${worksheet.lastRow.number}:J${worksheet.lastRow.number}`);
         
         var tam = Number(numGv) + Number(list[i].phanCongGiangViens.length)
         try {
