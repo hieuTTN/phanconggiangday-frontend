@@ -144,9 +144,9 @@ function getMau2(list, namHoc, workbook){
     worksheet.addRow(["BẢNG PHÂN CÔNG CÔNG TÁC CỦA CÁN BỘ, GIẢNG VIÊN CƠ HỮU"]); // Row 6
     worksheet.addRow(['']); // Row 7
     worksheet.addRow(['']); // Row 8
-    worksheet.addRow(["STT", "Mã CB", "Họ và tên GV", "Năm sinh", "Chức danh, học vị","Phân công giảng dạy","","","","","",
-        "Tổng tiết dạy thực tế","Công tác khác","Tổng CLC (đã tính CVHT CLC)", "Tổng số tiết công tác của GV"]); // Row 9
-    worksheet.addRow(["", "", "","", "", "Tên học phần", "Mã học phần","Số TC", "Số tiết của HP", "Số lượng lớp, nhóm","Tổng số tiết giảng dạy của GV","","","",""]); // Row 10
+    worksheet.addRow(["STT", "Mã CB", "Họ và tên GV", "Năm sinh", "Chức danh, học vị","Phân công giảng dạy","","","","",
+        ,"Công tác khác","Tổng CLC (đã tính CVHT CLC)", "Tổng số tiết công tác của GV"]); // Row 9
+    worksheet.addRow(["", "", "","", "", "Tên học phần", "Mã học phần","Số TC", "Số tiết của HP", "Số lượng lớp, nhóm","Tổng số tiết giảng dạy của GV","","",""]); // Row 10
     worksheet.mergeCells('A6:S6');
     worksheet.mergeCells('A1:F1');
     worksheet.mergeCells('A2:F2');
@@ -177,7 +177,6 @@ function getMau2(list, namHoc, workbook){
     worksheet.mergeCells('L9:L10');
     worksheet.mergeCells('M9:M10');
     worksheet.mergeCells('N9:N10');
-    worksheet.mergeCells('O9:O10');
 
     for(var i=0; i< list.length; i++){
         worksheet.addRow([
@@ -185,6 +184,7 @@ function getMau2(list, namHoc, workbook){
         ]);
         var phanCongs = list[i].phanCongGiangViens
         var numGv = worksheet.lastRow.number
+        var tongDay = 0;
         for(var j=0; j< phanCongs.length; j++){
             var soTietTh = 0;
             if(phanCongs[j].loaiNhom == 'ALL'){
@@ -196,11 +196,16 @@ function getMau2(list, namHoc, workbook){
             if(phanCongs[j].loaiNhom == 'LT'){
                 soTietTh = phanCongs[j].soNhom* phanCongs[j].keHoachChiTiet.hocPhan.soTietLyThuyet
             }
+            tongDay += soTietTh;
             worksheet.addRow([
                 '','','','','',phanCongs[j].keHoachChiTiet.hocPhan.tenHP,phanCongs[j].keHoachChiTiet.hocPhan.maHP,
                 phanCongs[j].keHoachChiTiet.hocPhan.soTinChi, phanCongs[j].keHoachChiTiet.hocPhan.tongSoTiet,
-                phanCongs[j].soNhom + (phanCongs[j].loaiNhom == 'ALL'?'':phanCongs[j].loaiNhom),soTietTh, soTietTh*phanCongs[j].keHoachChiTiet.hocPhan.heSo
+                phanCongs[j].soNhom + (phanCongs[j].loaiNhom == 'ALL'?'':phanCongs[j].loaiNhom),soTietTh
             ]);
+            worksheet.addRow([
+                'Tổng cộng','','','','','','','','','',soTietTh
+            ]);
+            worksheet.mergeCells(`A${worksheet.lastRow.number}:J${worksheet.lastRow.number}`);
         }
         
         var tam = Number(numGv) + Number(list[i].phanCongGiangViens.length)
@@ -211,7 +216,6 @@ function getMau2(list, namHoc, workbook){
             worksheet.mergeCells(`D${numGv}:D${tam}`);
             worksheet.mergeCells(`E${numGv}:E${tam}`);
         } catch (error) {
-            
         }
     }
     worksheet.eachRow((row) => {
@@ -225,6 +229,13 @@ function getMau2(list, namHoc, workbook){
             }
         });
     });
+
+    worksheet.views = [
+        {
+          state: 'frozen',
+          ySplit: 10, // Freeze up to row 10 (1-based index)
+        },
+    ];
 }
 
 function getNgay(){
