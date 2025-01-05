@@ -211,7 +211,7 @@ const AdminKeHoachChiTiet = ()=>{
     async function xuatFileExcel() {
         var response = await getMethod("/api/thong-ke/all/thong-ke-all?idNamHoc="+selectNamHoc.id)
         var result = await response.json();
-        exportExcel(result, selectNamHoc)
+        exportExcel(result.keHoachChiTiet, selectNamHoc, result.GiangVienCTH)
     }
 
 
