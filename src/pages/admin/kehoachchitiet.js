@@ -47,8 +47,10 @@ var url = '';
 const AdminKeHoachChiTiet = ()=>{
     const [items, setItems] = useState([]);
     const [namHoc, setnamHoc] = useState([]);
+    const [boMon, setBoMon] = useState([]);
     const [hocphan, sethocphan] = useState([]);
     const [selectNamHoc, setSelectNamHoc] = useState(null);
+    const [selectBoMon, setSelectBoMon] = useState(null);
     const [pageCount, setpageCount] = useState(0);
     const [pagecurrent, setpagecurrent] = useState(0);
     const [totalElement, setTotalElement] = useState(0);
@@ -58,16 +60,23 @@ const AdminKeHoachChiTiet = ()=>{
             var response = await getMethod('/api/nam-hoc/all/find-all-list')
             var result = await response.json();
             setnamHoc(result)
+            setSelectNamHoc(result[result.length - 1])
             getKeHoachChiTiet(result[result.length-1].id)
-
+            var response = await getMethod('/api/bomon/all/find-all')
+            var result = await response.json();
+            setBoMon(result)
         };
         getSelect();
+
     }, []);
 
     const getKeHoachChiTiet = async(idnamhoc, search) =>{
         var urlfr = '/api/ke-hoach-chi-tiet/all/find-by-kehoach?&size='+size+'&idNamHoc='+idnamhoc+'&sort=tongSoNhom,asc'
         if(search != null && search != undefined){
             urlfr += '&search='+search
+        }
+        if(selectBoMon != null){
+            urlfr += '&idBoMon='+selectBoMon.id
         }
         urlfr += '&page='
         url = urlfr;
@@ -235,7 +244,8 @@ const AdminKeHoachChiTiet = ()=>{
     return (
         <>
             <div class="headerpageadmin d-flex justify-content-between align-items-center p-3 bg-light border">
-                <strong class="text-left"><i className='fa fa-users'></i> Quản Lý Kế Hoạch Chi Tiết - tìm thấy {totalElement} học phần</strong>
+
+                <strong class="text-left textcth"><i className='fa fa-users'></i> Danh sách các môn học được lên kế hoạch năm học - HK {selectNamHoc?.hocKy}  {selectNamHoc?.tenNamHoc} </strong>
                 <div class="search-wrapper d-flex align-items-center">
                     <div className='d-flex divngayadmin'>
                         {selectNamHoc == null?'':<button onClick={()=>khoaTatca()} className='btn btn-danger'>Khóa</button>}
@@ -251,6 +261,16 @@ const AdminKeHoachChiTiet = ()=>{
                             getOptionValue={(option) => option.id}    
                             id='namHoc'
                             placeholder="Chọn năm học"
+                        /> 
+                        <Select
+                            className="select-container selectheader" 
+                            options={boMon}
+                            value={selectBoMon}
+                            onChange={setSelectBoMon}
+                            getOptionLabel={(option) => option.tenBoMon} 
+                            getOptionValue={(option) => option.id}    
+                            id='boMon'
+                            placeholder="Chọn bộ môn"
                         /> 
                         <button onClick={locKeHoach} className='btn btn-primary selectheader'>Lọc</button>
                         <button data-bs-toggle="modal" data-bs-target="#addtk" className='btn btn-primary selectheader'><i class="fa fa-plus"></i></button>
@@ -294,7 +314,8 @@ const AdminKeHoachChiTiet = ()=>{
                                             <input required name='soluong' onChange={(e) => handleInputChange(item.id, 'tongSinhVien', e.target.value)} 
                                                 value={item.tongSinhVien || ''} className='inputnoborder' />
                                             <button className='edit-btn'><i class="fa fa-edit"></i></button>
-                                        </form>
+                                        </form><br/>
+                                        Tham khảo: <strong>{item.tongSinhVienThamKhao}</strong>
                                     </td>
                                     <td>{item.hocPhan.maHP} - {item.hocPhan.tenHP}</td>
                                     <td>{item.hocPhan.boMon?.tenBoMon}</td>

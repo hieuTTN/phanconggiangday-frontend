@@ -4,7 +4,7 @@ import {toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import $ from 'jquery'; 
 import Swal from 'sweetalert2'
-import {getMethod,postMethodPayload, deleteMethod} from '../../services/request';
+import {getMethod,postMethodPayload, deleteMethod, postMethod} from '../../services/request';
 import Select from 'react-select';
 
 
@@ -92,6 +92,16 @@ const TeacherGiangDay = ()=>{
         }
     }
 
+    async function updateLoaiNhom(id, loai){
+        var response = await postMethod('/api/giang-vien-hoc-phan/teacher/update-loainhom?id='+id+'&loaiNhom='+loai)
+        if (response.status < 300) {
+            toast.success("Cập nhật hành công!");
+        }
+        else {
+            toast.error("Thất bại");
+        }
+    }
+
 
     return (
         <>
@@ -127,7 +137,13 @@ const TeacherGiangDay = ()=>{
                                     <td>{item.hocPhan.soTinChi}</td>
                                     <td>{item.hocPhan.soTietLyThuyet}</td>
                                     <td>{item.hocPhan.soTietThucHanh}</td>
-                                    <td>{loai}</td>
+                                    <td>
+                                        <select onChange={(event)=>updateLoaiNhom(item.id, event.target.value)} className='form-control'>
+                                            <option selected={item.loaiNhom == 'ALL'} value='ALL'>Lý thuyết + Thực hành</option>
+                                            <option selected={item.loaiNhom == 'LT'} value='LT'>Lý thuyết</option>
+                                            <option selected={item.loaiNhom == 'TH'} value='TH'>Thực hành</option>
+                                        </select>
+                                    </td>
                                     <td class="sticky-col">
                                         <button onClick={()=>deleteGiangDay(item.id)} class="delete-btn"><i className='fa fa-trash'></i></button>
                                     </td>
