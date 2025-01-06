@@ -131,6 +131,9 @@ function getMauHK1(list, namHoc, workbook){
             }
         });
     });
+
+    worksheet.getColumn(3).width = 30; 
+    worksheet.getColumn(14).width = 30; 
 }
 
 function getMau2(list, namHoc, workbook){
@@ -236,6 +239,9 @@ function getMau2(list, namHoc, workbook){
           ySplit: 10, // Freeze up to row 10 (1-based index)
         },
     ];
+    worksheet.getColumn(3).width = 30; 
+    worksheet.getColumn(4).width = 15; 
+    worksheet.getColumn(6).width = 30; 
 }
 
 function getNgay(){

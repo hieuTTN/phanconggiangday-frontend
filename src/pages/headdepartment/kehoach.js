@@ -25,6 +25,7 @@ const TruongBoMonKeHoach = ()=>{
     const [listKeHoach, setListKeHoach] = useState([]);
     const [giangVienHocPhan, setGiangVienHocPhan] = useState([]);
     const [soNhomDay, setSoNhomDay] = useState(0);
+    const [tongTiet, setTongTiet] = useState(0);
     const [totalElement, setTotalElement] = useState(0);
 
     useEffect(()=>{
@@ -143,6 +144,7 @@ const TruongBoMonKeHoach = ()=>{
         var result = await response.json();
         setGiangVienHocPhan(result.giangVienHocPhans)
         setSoNhomDay(result.soNhomDay)
+        setTongTiet(result.tongTiet)
     }
 
     function setThongTinNhom(item){
@@ -358,9 +360,10 @@ const TruongBoMonKeHoach = ()=>{
                             </form>
                             <div className='col-sm-12'>
                                 {giangVienHocPhan.map((item=>{
-                                    return  <span className={item.hocPhan.id == kehoach?.hocPhan.id?'activespmn':''}>{item.hocPhan.tenHP} - {item.loaiNhom}, </span>
+                                    return  <span className={item.hocPhan.id == kehoach?.hocPhan.id?'activespmn':''}>{item.hocPhan.tenHP} - {item.loaiNhom=='ALL'?'LT+TH':item.loaiNhom}, </span>
                                 }))}
-                                Số nhóm {soNhomDay}
+                                Số nhóm {soNhomDay}<br/>
+                                Số tiết được phân công {selectNamHoc?.hocKy} - {selectNamHoc?.tenNamHoc}: {tongTiet}
                             </div>
                             <div class="tablediv">
                                 <div class="headertable">
