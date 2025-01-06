@@ -207,7 +207,7 @@ function getMau2(list, namHoc, workbook){
             ]);
         }
         worksheet.addRow([
-            'Tổng cộng','','','','','','','','','',soTietTh
+            'Tổng cộng','','','','','','','','','',tongDay
         ]);
         worksheet.mergeCells(`A${worksheet.lastRow.number}:J${worksheet.lastRow.number}`);
         
@@ -233,12 +233,12 @@ function getMau2(list, namHoc, workbook){
         });
     });
 
-    worksheet.views = [
-        {
-          state: 'frozen',
-          ySplit: 10, // Freeze up to row 10 (1-based index)
-        },
-    ];
+    // worksheet.views = [
+    //     {
+    //       state: 'frozen',
+    //       ySplit: 10, // Freeze up to row 10 (1-based index)
+    //     },
+    // ];
     worksheet.getColumn(3).width = 30; 
     worksheet.getColumn(4).width = 15; 
     worksheet.getColumn(6).width = 30; 
