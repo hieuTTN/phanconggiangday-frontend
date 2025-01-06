@@ -214,6 +214,23 @@ const AdminKeHoachChiTiet = ()=>{
         exportExcel(result.keHoachChiTiet, selectNamHoc, result.GiangVienCTH)
     }
 
+    async function guiMail() {
+        var con = window.confirm("Xác nhận gửi mail mời giảng, thính giảng kỳ này?");
+        if(con == false){
+            return;
+        }
+        if(selectNamHoc == null){
+            toast.error("Hãy chọn 1 học kỳ");
+            return;
+        }
+        const response = await postMethod('/api/phan-cong-giang-vien/admin/send-mail-moi-giang?namHocId='+selectNamHoc.id)
+        if (response.status < 300) {
+            toast.success("gửi mail thành công")
+        } 
+        else {
+            toast.error("Thất bại");
+        }
+    }
 
     return (
         <>
@@ -221,8 +238,9 @@ const AdminKeHoachChiTiet = ()=>{
                 <strong class="text-left"><i className='fa fa-users'></i> Quản Lý Kế Hoạch Chi Tiết - tìm thấy {totalElement} học phần</strong>
                 <div class="search-wrapper d-flex align-items-center">
                     <div className='d-flex divngayadmin'>
-                        {selectNamHoc == null?'':<button onClick={()=>khoaTatca()} className='btn btn-danger selectheader'>Khóa kế hoạch</button>}
-                        {selectNamHoc == null?'':<button onClick={()=>xuatFileExcel()} className='btn btn-primary selectheader'>Xuất kế hoạch</button>}
+                        {selectNamHoc == null?'':<button onClick={()=>khoaTatca()} className='btn btn-danger'>Khóa</button>}
+                        {selectNamHoc == null?'':<button onClick={()=>guiMail()} className='btn btn-primary selectheader'><i class="fa fa-envelope" aria-hidden="true"></i></button>}
+                        {selectNamHoc == null?'':<button onClick={()=>xuatFileExcel()} className='btn btn-primary selectheader'>Xuất file</button>}
                         <input onKeyUp={searchKeHoach} id='search' placeholder='Nhập mã hoặc tên môn học' className='selectheader'/>  
                         <Select
                             className="select-container selectheader" 
