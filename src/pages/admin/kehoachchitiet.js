@@ -289,6 +289,7 @@ const AdminKeHoachChiTiet = ()=>{
                                 <th>Số lượng sinh viên/ nhóm</th>
                                 <th>Tổng số nhóm</th>
                                 <th>Tổng sinh viên</th>
+                                <th>Tổng SV tham khảo</th>
                                 <th>Học phần</th>
                                 <th>Bộ môn</th>
                                 <th>Khóa</th>
@@ -314,9 +315,9 @@ const AdminKeHoachChiTiet = ()=>{
                                             <input required name='soluong' onChange={(e) => handleInputChange(item.id, 'tongSinhVien', e.target.value)} 
                                                 value={item.tongSinhVien || ''} className='inputnoborder' />
                                             <button className='edit-btn'><i class="fa fa-edit"></i></button>
-                                        </form><br/>
-                                        Tham khảo: <strong>{item.tongSinhVienThamKhao}</strong>
+                                        </form>
                                     </td>
+                                    <td>{item.tongSinhVienThamKhao}</td>
                                     <td>{item.hocPhan.maHP} - {item.hocPhan.tenHP}</td>
                                     <td>{item.hocPhan.boMon?.tenBoMon}</td>
                                     <td>
