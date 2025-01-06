@@ -303,18 +303,18 @@ const AdminKeHoachChiTiet = ()=>{
                                     <td>
                                         <form onSubmit={updateSoLuong}>
                                             <input name='idct' value={item.id} type='hidden'/>
-                                            <input required name='soluong' onChange={(e) => handleInputChange(item.id, 'soLuongSinhVienNhom', e.target.value)}
+                                            <input disabled={item.locked} required name='soluong' onChange={(e) => handleInputChange(item.id, 'soLuongSinhVienNhom', e.target.value)}
                                             value={item.soLuongSinhVienNhom || ''} className='inputnoborder' placeholder='0'/>
-                                            <button className='edit-btn'><i class="fa fa-edit"></i></button>
+                                            <button className={item.locked == false?'edit-btn':'displaynone'}><i class="fa fa-edit"></i></button>
                                         </form>
                                     </td>
                                     <td>{item.tongSoNhom}</td>
                                     <td>
                                         <form onSubmit={updateTongSoLuong}>
                                             <input name='idct' value={item.id} type='hidden'/>
-                                            <input required name='soluong' onChange={(e) => handleInputChange(item.id, 'tongSinhVien', e.target.value)} 
+                                            <input disabled={item.locked} required name='soluong' onChange={(e) => handleInputChange(item.id, 'tongSinhVien', e.target.value)} 
                                                 value={item.tongSinhVien || ''} className='inputnoborder' />
-                                            <button className='edit-btn'><i class="fa fa-edit"></i></button>
+                                            <button className={item.locked == false?'edit-btn':'displaynone'}><i class="fa fa-edit"></i></button>
                                         </form>
                                     </td>
                                     <td>{item.tongSinhVienThamKhao}</td>
